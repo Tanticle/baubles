@@ -1,0 +1,15 @@
+{
+  "key.baubles.inventory": "Baubles Inventory",
+
+  "button.baubles.normal": "Normal",
+  "button.baubles.baubles": "Baubles",
+
+  "name.baubles.prefix": "Bauble - ",
+  "name.baubles.amulet": "Amulet",
+  "name.baubles.ring": "Ring",
+  "name.baubles.belt": "Belt",
+  "name.baubles.head": "Head",
+  "name.baubles.body": "Body",
+  "name.baubles.charm": "Charm",
+  "name.baubles.any": "Trinket"
+}
