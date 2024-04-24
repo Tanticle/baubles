@@ -136,7 +136,7 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
             return false;
         }
         ItemStack old = slot.getItem();
-        if(old.isStackable() && ItemStack.isSameItemSameTags(stack, old)) {
+        if(old.isStackable() && ItemStack.isSameItemSameComponents(stack, old)) {
             int totalAmount = old.getCount() + stack.getCount();
             if(totalAmount <= old.getMaxStackSize()) {
                 old.setCount(totalAmount);

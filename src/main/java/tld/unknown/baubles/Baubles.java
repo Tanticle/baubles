@@ -20,9 +20,11 @@ public class Baubles {
     }
 
     //TODO: Issues with stackables in slots and shift click.
-    //TODO: No unequip on shiftlick out of slot
+    //TODO: Remove from slot if tag is no longer valid
     //TODO: Click Swapping
 
     //TODO: Client Equip fires on first open (Sync issue?)
+    //TODO: No unequip on shiftlick out of slot
+
     //TODO: Stop cursor from re-centering when opening baubles inv
 }

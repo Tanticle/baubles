@@ -38,7 +38,7 @@ public class BaublesInventoryCapability extends ItemStackHandler implements IBau
     @Override
     protected void onContentsChanged(int slot) {
         if(!player.level().isClientSide()) {
-            ((ServerPlayer)player).connection.send(new ClientboundSyncDataPacket(this.serializeNBT()));
+            ((ServerPlayer)player).connection.send(new ClientboundSyncDataPacket(this.serializeNBT(this.getPlayer().registryAccess())));
         }
     }
 

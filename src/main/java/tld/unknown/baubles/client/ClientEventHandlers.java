@@ -13,6 +13,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
@@ -32,7 +33,7 @@ import tld.unknown.baubles.networking.ServerboundOpenInvPacket;
 
 public final class ClientEventHandlers {
 
-    @Mod.EventBusSubscriber(modid = BaublesData.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = BaublesData.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static final class ModBusSubscriber {
 
         @SubscribeEvent
@@ -59,7 +60,7 @@ public final class ClientEventHandlers {
         }
     }
 
-    @Mod.EventBusSubscriber(modid = BaublesData.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = BaublesData.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
     public static final class ForgeBusSubscriber {
 
         @SubscribeEvent
@@ -86,7 +87,11 @@ public final class ClientEventHandlers {
                     event.getTooltipElements().add(Either.left(BaubleType.NAME_PREFIX.copy().append(Component.translatable("name.bauble.any"))));
                 } else {
                     BaublesAPI.getBaubleTypes(event.getItemStack()).forEach(t -> {
-                        event.getTooltipElements().add(Either.left(t.getDisplayName()));
+                        if(t == BaubleType.RING_LEFT || t == BaubleType.RING_RIGHT) {
+                            if(!event.getTooltipElements().contains(Either.left(t.getDisplayName())))
+                                event.getTooltipElements().add(Either.left(t.getDisplayName()));
+                        } else
+                            event.getTooltipElements().add(Either.left(t.getDisplayName()));
                     });
                 }
             }

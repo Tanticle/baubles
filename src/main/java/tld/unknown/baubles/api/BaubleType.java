@@ -8,22 +8,24 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public enum BaubleType {
-    AMULET(BaublesData.Tags.ITEM_AMULET, BaublesData.Textures.PLACEHOLDER_AMULET),
-    RING_RIGHT(BaublesData.Tags.ITEM_RING, BaublesData.Textures.PLACEHOLDER_RING),
-    RING_LEFT(BaublesData.Tags.ITEM_RING, BaublesData.Textures.PLACEHOLDER_RING),
-    BELT(BaublesData.Tags.ITEM_BELT, BaublesData.Textures.PLACEHOLDER_BELT),
-    HEAD(BaublesData.Tags.ITEM_HEAD, BaublesData.Textures.PLACEHOLDER_HEAD),
-    BODY(BaublesData.Tags.ITEM_BODY, BaublesData.Textures.PLACEHOLDER_CHEST),
-    CHARM(BaublesData.Tags.ITEM_CHARM, BaublesData.Textures.PLACEHOLDER_CHARM);
+    AMULET(BaublesData.Tags.ITEM_AMULET, BaublesData.Textures.PLACEHOLDER_AMULET, Component.translatable("name.baubles.amulet")),
+    RING_RIGHT(BaublesData.Tags.ITEM_RING, BaublesData.Textures.PLACEHOLDER_RING, Component.translatable("name.baubles.ring")),
+    RING_LEFT(BaublesData.Tags.ITEM_RING, BaublesData.Textures.PLACEHOLDER_RING, Component.translatable("name.baubles.ring")),
+    BELT(BaublesData.Tags.ITEM_BELT, BaublesData.Textures.PLACEHOLDER_BELT, Component.translatable("name.baubles.belt")),
+    HEAD(BaublesData.Tags.ITEM_HEAD, BaublesData.Textures.PLACEHOLDER_HEAD, Component.translatable("name.baubles.head")),
+    BODY(BaublesData.Tags.ITEM_BODY, BaublesData.Textures.PLACEHOLDER_CHEST, Component.translatable("name.baubles.chest")),
+    CHARM(BaublesData.Tags.ITEM_CHARM, BaublesData.Textures.PLACEHOLDER_CHARM, Component.translatable("name.baubles.charm"));
 
-    public static final Component NAME_PREFIX = Component.translatable("name.baubles.prefix").withStyle(ChatFormatting.GOLD);
+    public static final Component NAME_PREFIX = Component.translatable("name.baubles.prefix").withStyle(ChatFormatting.GOLD).append(" ");
 
     private final TagKey<Item> slotTag;
     private final ResourceLocation placeholderTexture;
+    private final Component name;
 
-    BaubleType(TagKey<Item> slotTag, ResourceLocation placeholderTexture) {
+    BaubleType(TagKey<Item> slotTag, ResourceLocation placeholderTexture, Component name) {
         this.slotTag = slotTag;
         this.placeholderTexture = placeholderTexture;
+        this.name = name;
     }
 
     public static boolean hasBaubleTags(ItemStack stack) {
@@ -52,7 +54,6 @@ public enum BaubleType {
     }
 
     public Component getDisplayName() {
-        Component name = Component.translatable("name.baubles." + this.name().toLowerCase());
-        return NAME_PREFIX.copy().append(name);
+        return NAME_PREFIX.copy().append(this.name);
     }
 }

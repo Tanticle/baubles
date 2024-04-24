@@ -3,12 +3,13 @@ package tld.unknown.baubles;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import tld.unknown.baubles.api.*;
 import tld.unknown.baubles.networking.ClientboundSyncDataPacket;
 import tld.unknown.baubles.networking.NetworkHandler;
@@ -16,15 +17,15 @@ import tld.unknown.baubles.networking.ServerboundOpenInvPacket;
 
 public final class EventHandlers {
 
-    @Mod.EventBusSubscriber(modid = BaublesData.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = BaublesData.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
     public static final class ModBusSubscriber {
 
         @SubscribeEvent
-        public static void registerPackets(final RegisterPayloadHandlerEvent event) {
-            final IPayloadRegistrar registrar = event.registrar(BaublesData.MOD_ID);
+        public static void registerPackets(final RegisterPayloadHandlersEvent event) {
+            final PayloadRegistrar registrar = event.registrar(BaublesData.MOD_ID);
             registrar.versioned(BaublesData.Networking.VERSION);
-            registrar.common(BaublesData.Networking.SYNC_DATA, ClientboundSyncDataPacket::new, handler -> handler.client(NetworkHandler::clientHandleDataSync));
-            registrar.play(BaublesData.Networking.OPEN_INV, buf -> new ServerboundOpenInvPacket(buf.readBoolean(), buf.readFloat(), buf.readFloat()), handler -> handler.server(NetworkHandler::serverHandleOpenInv));
+            registrar.commonToClient(ClientboundSyncDataPacket.TYPE, ClientboundSyncDataPacket.CODEC, NetworkHandler::clientHandleDataSync);
+            registrar.playToServer(ServerboundOpenInvPacket.TYPE, ServerboundOpenInvPacket.CODEC, NetworkHandler::serverHandleOpenInv);
         }
 
         @SubscribeEvent
@@ -33,7 +34,7 @@ public final class EventHandlers {
         }
     }
 
-    @Mod.EventBusSubscriber(modid = BaublesData.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    @EventBusSubscriber(modid = BaublesData.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static final class ForgeBusSubscriber {
 
         @SubscribeEvent
