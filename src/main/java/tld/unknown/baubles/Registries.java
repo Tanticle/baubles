@@ -17,7 +17,6 @@ public final class Registries {
 
     private static final DeferredRegister<AttachmentType<?>> REGISTRY_ATTACHMENTS = DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, BaublesData.MOD_ID);
     private static final DeferredRegister<MenuType<?>> REGISTRY_MENU_TYPES = DeferredRegister.create(BuiltInRegistries.MENU, BaublesData.MOD_ID);
-    private static final DeferredRegister<Item> REGISTRY_ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, BaublesData.MOD_ID);
 
     /* -----------------------------------------------------------------------------------------------------------*/
 
@@ -29,15 +28,10 @@ public final class Registries {
             "baubles_inventory",
             () -> new MenuType<>(ExpandedInventoryMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
-    public static final DeferredHolder<Item, TestRingItem> ITEM_RING = REGISTRY_ITEMS.register(
-            "ring",
-            TestRingItem::new);
-
     /* -----------------------------------------------------------------------------------------------------------*/
 
     public static void init(IEventBus bus) {
         REGISTRY_ATTACHMENTS.register(bus);
         REGISTRY_MENU_TYPES.register(bus);
-        REGISTRY_ITEMS.register(bus);
     }
 }

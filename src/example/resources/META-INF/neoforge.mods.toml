@@ -3,22 +3,29 @@ loaderVersion="${loader_version_range}"
 license="${mod_license}"
 
 [[mods]]
-modId="${mod_id}"
+modId="baubles_example"
 version="${mod_version}"
-displayName="${mod_name}"
+displayName="Baubles 2 Example"
 authors="${mod_authors}"
 description='''${mod_description}'''
 
-[[dependencies."${mod_id}"]]
+[[dependencies."baubles_example"]]
 modId="neoforge"
 type="required"
 versionRange="${neo_version_range}"
 ordering="NONE"
 side="BOTH"
 
-[[dependencies."${mod_id}"]]
+[[dependencies."baubles_example"]]
 modId="minecraft"
 type="required"
 versionRange="${minecraft_version_range}"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies."baubles_example"]]
+modId="baubles"
+type="required"
+versionRange="1.0"
 ordering="NONE"
 side="BOTH"

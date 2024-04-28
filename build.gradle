@@ -11,6 +11,8 @@ base { archivesName = mod_id }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+sourceSets { api; main; example; }
+
 runs {
     configureEach {
         systemProperty 'terminal.ansi', 'true'
@@ -19,26 +21,30 @@ runs {
         modSource project.sourceSets.main
     }
 
+    example {
+        modSource project.sourceSets.example
+        configure 'client'
+    }
     client { systemProperty 'forge.enabledGameTestNamespaces', project.mod_id }
     server { systemProperty 'forge.enabledGameTestNamespaces', project.mod_id; programArgument '--nogui' }
     gameTestServer { systemProperty 'forge.enabledGameTestNamespaces', project.mod_id }
-    data { programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath() }
 }
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
+    apiImplementation "net.neoforged:neoforge:${neo_version}"
+    exampleImplementation "net.neoforged:neoforge:${neo_version}"
+    implementation sourceSets.api.output
+    exampleImplementation sourceSets.api.output
 }
 
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
-            minecraft_version   : minecraft_version, minecraft_version_range: minecraft_version_range,
-            neo_version         : neo_version, neo_version_range: neo_version_range,
+            minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
+            neo_version: neo_version, neo_version_range: neo_version_range,
             loader_version_range: loader_version_range,
-            mod_id              : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
-            mod_authors         : mod_authors, mod_description: mod_description,
+            mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors: mod_authors, mod_description: mod_description,
     ]
     inputs.properties replaceProperties
 
