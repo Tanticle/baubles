@@ -4,16 +4,16 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.TickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import tld.unknown.baubles.api.*;
 import tld.unknown.baubles.networking.ClientboundSyncDataPacket;
 import tld.unknown.baubles.networking.NetworkHandler;
-import tld.unknown.baubles.networking.ServerboundOpenInvPacket;
+import tld.unknown.baubles.networking.ServerboundOpenBaublesInvPacket;
 
 public final class EventHandlers {
 
@@ -25,7 +25,7 @@ public final class EventHandlers {
             final PayloadRegistrar registrar = event.registrar(BaublesData.MOD_ID);
             registrar.versioned(BaublesData.Networking.VERSION);
             registrar.commonToClient(ClientboundSyncDataPacket.TYPE, ClientboundSyncDataPacket.CODEC, NetworkHandler::clientHandleDataSync);
-            registrar.playToServer(ServerboundOpenInvPacket.TYPE, ServerboundOpenInvPacket.CODEC, NetworkHandler::serverHandleOpenInv);
+            registrar.playToServer(ServerboundOpenBaublesInvPacket.TYPE, ServerboundOpenBaublesInvPacket.CODEC, NetworkHandler::serverHandleOpenInv);
         }
 
         @SubscribeEvent
@@ -40,8 +40,8 @@ public final class EventHandlers {
         @SubscribeEvent
         public static void playerTick(final TickEvent.PlayerTickEvent event) {
             if(event.phase == TickEvent.Phase.END) {
-                IBaubleHolder baubles = event.player.getData(Registries.ATTACHMENT_BAUBLES);
-                for (int i = 0; i < IBaubleHolder.INVENTORY_SIZE; i++) {
+                IBaublesHolder baubles = event.player.getData(Registries.ATTACHMENT_BAUBLES);
+                for (int i = 0; i < IBaublesHolder.INVENTORY_SIZE; i++) {
                     ItemStack slot = baubles.getAllSlots()[i];
                     IBauble impl = BaublesAPI.getBaubleImplementation(slot);
                     if(slot != ItemStack.EMPTY && impl != null) {
@@ -49,6 +49,22 @@ public final class EventHandlers {
                     }
                 }
             }
+        }
+
+
+        @SubscribeEvent
+        public static void datapackSync(final OnDatapackSyncEvent event) {
+            event.getRelevantPlayers().forEach(player -> {
+                BaublesHolderAttachment holder = player.getData(Registries.ATTACHMENT_BAUBLES);
+                for (BaubleType value : BaubleType.values()) {
+                    ItemStack itemCopy = holder.getBaubleInSlot(value).copy();
+                    if(!value.isItemValid(itemCopy)) {
+                        holder.setBaubleInSlot(value, ItemStack.EMPTY);
+                        player.addItem(itemCopy);
+                    }
+                }
+                player.connection.send(new ClientboundSyncDataPacket(holder.serializeNBT(player.level().registryAccess())));
+            });
         }
     }
 }

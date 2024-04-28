@@ -16,8 +16,9 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.BaublesData;
-import tld.unknown.baubles.BaublesInventoryCapability;
+import tld.unknown.baubles.BaublesHolderAttachment;
 import tld.unknown.baubles.Registries;
+import tld.unknown.baubles.api.IBauble;
 
 public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
 
@@ -50,7 +51,7 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
         this(pContainerId, p.getInventory(), p.getData(Registries.ATTACHMENT_BAUBLES));
     }
 
-    private ExpandedInventoryMenu(int pContainerId, Inventory playerInventory, BaublesInventoryCapability baubles) {
+    private ExpandedInventoryMenu(int pContainerId, Inventory playerInventory, BaublesHolderAttachment baubles) {
         super(Registries.MENU_EXPANDED_INVENTORY.get(), pContainerId);
         this.player = playerInventory.player;
         // Crafting Slots
@@ -124,7 +125,7 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
                 this.addSlot(new BaubleSlot(baubles, slot, i * 19 + 77, ii * 18 + 8));
             }
 
-        this.baublesInvIdStart = slots.size() - BaublesInventoryCapability.INVENTORY_SIZE;
+        this.baublesInvIdStart = slots.size() - BaublesHolderAttachment.INVENTORY_SIZE;
     }
 
     private boolean baubleMoveStack(ItemStack stack, int slotId) {
@@ -161,25 +162,35 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
             EquipmentSlot equipmentslot = Mob.getEquipmentSlotForItem(itemstack);
-            if(!(slot instanceof BaubleSlot) && BaublesAPI.isBaubleItem(itemstack1)) {
-                if(itemstack1.is(BaublesData.Tags.ITEM_TRINKET)) {
-                    for(int i = 0; i < BaublesInventoryCapability.INVENTORY_SIZE; i++) {
-                        int slotId = baublesInvIdStart + i;
-                        if(!baubleMoveStack(itemstack, slotId)) {
-                            slot.set(ItemStack.EMPTY);
-                            slot.setChanged();
-                            return ItemStack.EMPTY;
+            if(!(slot instanceof BaubleSlot)) {
+                if(BaublesAPI.isBaubleItem(itemstack1)) {
+                    if(itemstack1.is(BaublesData.Tags.ITEM_TRINKET)) {
+                        for(int i = 0; i < BaublesHolderAttachment.INVENTORY_SIZE; i++) {
+                            int slotId = baublesInvIdStart + i;
+                            if(!baubleMoveStack(itemstack, slotId)) {
+                                slot.set(ItemStack.EMPTY);
+                                slot.setChanged();
+                                return ItemStack.EMPTY;
+                            }
+                        }
+                    } else {
+                        for(BaubleType type : BaublesAPI.getBaubleTypes(itemstack1)) {
+                            int slotId = baublesInvIdStart + type.ordinal();
+                            if(!baubleMoveStack(itemstack, slotId)) {
+                                slot.set(ItemStack.EMPTY);
+                                slot.setChanged();
+                                return ItemStack.EMPTY;
+                            }
                         }
                     }
-                } else {
-                    for(BaubleType type : BaublesAPI.getBaubleTypes(itemstack1)) {
-                        int slotId = baublesInvIdStart + type.ordinal();
-                        if(!baubleMoveStack(itemstack, slotId)) {
-                            slot.set(ItemStack.EMPTY);
-                            slot.setChanged();
-                            return ItemStack.EMPTY;
-                        }
-                    }
+                    itemstack1 = itemstack.copy();
+                }
+            } else if(BaublesAPI.hasBaubleImplementation(itemstack1)) {
+                IBauble impl = BaublesAPI.getBaubleImplementation(itemstack1);
+                BaubleType type = BaubleType.bySlotId(pIndex - baublesInvIdStart);
+                if (impl.canUnequip(type, itemstack1, player) && this.moveItemStackTo(itemstack1, 9, 45, false)) {
+                    impl.onUnequipped(type, itemstack1, player);
+                    return ItemStack.EMPTY;
                 }
                 itemstack1 = itemstack.copy();
             }

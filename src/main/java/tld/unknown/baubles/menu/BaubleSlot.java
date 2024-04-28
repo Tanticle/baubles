@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.Nullable;
 import tld.unknown.baubles.api.BaublesAPI;
-import tld.unknown.baubles.BaublesInventoryCapability;
+import tld.unknown.baubles.BaublesHolderAttachment;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.IBauble;
 
@@ -16,7 +16,7 @@ public class BaubleSlot extends SlotItemHandler {
 
     private final BaubleType type;
 
-    public BaubleSlot(BaublesInventoryCapability handler, int index, int xPosition, int yPosition) {
+    public BaubleSlot(BaublesHolderAttachment handler, int index, int xPosition, int yPosition) {
         super(handler, index, xPosition, yPosition);
         this.type = BaubleType.bySlotId(index);
     }
@@ -26,7 +26,7 @@ public class BaubleSlot extends SlotItemHandler {
         boolean valid = type.isItemValid(stack);
         IBauble impl = BaublesAPI.getBaubleImplementation(stack);
         if(impl != null)
-            return valid && impl.canEquip(type, stack, ((BaublesInventoryCapability)getItemHandler()).getPlayer());
+            return valid && impl.canEquip(type, stack, ((BaublesHolderAttachment)getItemHandler()).getPlayer());
         return valid;
     }
 
@@ -45,26 +45,27 @@ public class BaubleSlot extends SlotItemHandler {
         IBauble impl = BaublesAPI.getBaubleImplementation(pStack);
         if(impl != null) {
             if(impl.canUnequip(type, pStack, pPlayer)) {
-                super.onTake(pPlayer, pStack);
+                setChanged();
                 impl.onUnequipped(type, pStack, pPlayer);
             }
         } else {
-            super.onTake(pPlayer, pStack);
+            setChanged();
         }
     }
 
     @Override
     public void set(ItemStack stack) {
-        Player p = ((BaublesInventoryCapability)getItemHandler()).getPlayer();
-        IBauble impl = BaublesAPI.getBaubleImplementation(getItem());
-        if(!ItemStack.matches(getItem(), stack) && !getItem().isEmpty() && impl != null)
+        ItemStack currentStack = getItem();
+        boolean isSame = ItemStack.isSameItemSameComponents(currentStack, stack);
+        Player p = ((BaublesHolderAttachment)getItemHandler()).getPlayer();
+        IBauble impl = BaublesAPI.getBaubleImplementation(currentStack);
+        if(impl != null && !isSame)
             impl.onUnequipped(type, getItem(), p);
-
-        ItemStack old = getItem().copy();
         super.set(stack);
-        IBauble implNew = BaublesAPI.getBaubleImplementation(stack);
-        if(!ItemStack.matches(getItem(), old) && implNew != null)
-            implNew.onEquipped(type, getItem(), p);
+        currentStack = getItem();
+        IBauble implNew = BaublesAPI.getBaubleImplementation(currentStack);
+        if(implNew != null && !isSame)
+            implNew.onEquipped(type, currentStack, p);
     }
 
     @Nullable

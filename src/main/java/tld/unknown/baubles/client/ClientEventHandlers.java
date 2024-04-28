@@ -2,24 +2,18 @@ package tld.unknown.baubles.client;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.event.TickEvent;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
-import net.neoforged.neoforge.registries.RegisterEvent;
 import tld.unknown.baubles.Registries;
 import tld.unknown.baubles.TestRingItem;
 import tld.unknown.baubles.api.BaubleType;
@@ -28,7 +22,7 @@ import tld.unknown.baubles.api.BaublesData;
 import tld.unknown.baubles.client.gui.BaublesButton;
 import tld.unknown.baubles.client.gui.ExpandedInventoryScreen;
 import tld.unknown.baubles.client.rendering.BaublesRenderLayer;
-import tld.unknown.baubles.networking.ServerboundOpenInvPacket;
+import tld.unknown.baubles.networking.ServerboundOpenBaublesInvPacket;
 
 
 public final class ClientEventHandlers {
@@ -67,7 +61,7 @@ public final class ClientEventHandlers {
         public static void clientTick(final TickEvent.ClientTickEvent event) {
             if(event.phase == TickEvent.Phase.START) {
                 if(BaublesClient.KEY_INVENTORY.consumeClick()) {
-                    Minecraft.getInstance().getConnection().send(new ServerboundOpenInvPacket(true, 0, 0));
+                    Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket(0, 0));
                 }
             }
         }

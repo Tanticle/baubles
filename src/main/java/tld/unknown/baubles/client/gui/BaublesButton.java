@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
 import tld.unknown.baubles.api.BaublesData;
-import tld.unknown.baubles.networking.ServerboundOpenInvPacket;
+import tld.unknown.baubles.networking.ServerboundOpenBaublesInvPacket;
 
 public class BaublesButton extends AbstractButton {
 
@@ -29,7 +29,7 @@ public class BaublesButton extends AbstractButton {
         } else {
             float x = (float)Minecraft.getInstance().mouseHandler.xpos();
             float y = (float)Minecraft.getInstance().mouseHandler.ypos();
-            Minecraft.getInstance().getConnection().send(new ServerboundOpenInvPacket(parent instanceof InventoryScreen, x, y));
+            Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket(x, y));
         }
     }
 

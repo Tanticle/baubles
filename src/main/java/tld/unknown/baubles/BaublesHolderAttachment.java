@@ -5,16 +5,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import tld.unknown.baubles.api.BaubleType;
-import tld.unknown.baubles.api.IBaubleHolder;
+import tld.unknown.baubles.api.IBaublesHolder;
 import tld.unknown.baubles.networking.ClientboundSyncDataPacket;
 
-public class BaublesInventoryCapability extends ItemStackHandler implements IBaubleHolder {
+public class BaublesHolderAttachment extends ItemStackHandler implements IBaublesHolder {
 
     public static final int INVENTORY_SIZE = 7;
 
     private final Player player;
 
-    public BaublesInventoryCapability(Player p) {
+    public BaublesHolderAttachment(Player p) {
         super(INVENTORY_SIZE);
         this.player = p;
     }
@@ -32,7 +32,7 @@ public class BaublesInventoryCapability extends ItemStackHandler implements IBau
 
     @Override
     public boolean isItemValid(int slot, ItemStack stack) {
-        return BaubleType.bySlotId(slot).isItemValid(stack);
+        return BaubleType.bySlotId(slot).isItemValid(stack) || stack == ItemStack.EMPTY;
     }
 
     @Override

@@ -2,7 +2,7 @@ package tld.unknown.baubles.api;
 
 import net.minecraft.world.item.ItemStack;
 
-public interface IBaubleHolder {
+public interface IBaublesHolder {
 
     int INVENTORY_SIZE = 7;
 

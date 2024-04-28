@@ -159,7 +159,7 @@ public class ExpandedInventoryScreen extends EffectRenderingInventoryScreen<Expa
             LivingEntity pEntity
     ) {
         pGuiGraphics.pose().pushPose();
-        pGuiGraphics.pose().translate((double)pX, (double)pY, 50.0);
+        pGuiGraphics.pose().translate(pX, pY, 50.0);
         pGuiGraphics.pose().mulPose(new Matrix4f().scaling((float)pScale, (float)pScale, (float)(-pScale)));
         pGuiGraphics.pose().translate(pTranslate.x, pTranslate.y, pTranslate.z);
         pGuiGraphics.pose().mulPose(pPose);

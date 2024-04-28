@@ -16,7 +16,7 @@ public enum BaubleType {
     BODY(BaublesData.Tags.ITEM_BODY, BaublesData.Textures.PLACEHOLDER_CHEST, Component.translatable("name.baubles.chest")),
     CHARM(BaublesData.Tags.ITEM_CHARM, BaublesData.Textures.PLACEHOLDER_CHARM, Component.translatable("name.baubles.charm"));
 
-    public static final Component NAME_PREFIX = Component.translatable("name.baubles.prefix").withStyle(ChatFormatting.GOLD).append(" ");
+    public static final Component NAME_PREFIX = Component.translatable("name.baubles.bauble").withStyle(ChatFormatting.GOLD).append(" - ");
 
     private final TagKey<Item> slotTag;
     private final ResourceLocation placeholderTexture;
@@ -50,7 +50,7 @@ public enum BaubleType {
     }
 
     public boolean isItemValid(ItemStack stack) {
-        return BaublesAPI.isBaubleItem(stack) && (stack.is(this.slotTag) || stack.is(BaublesData.Tags.ITEM_TRINKET));
+        return stack == ItemStack.EMPTY || (BaublesAPI.isBaubleItem(stack) && (stack.is(this.slotTag) || stack.is(BaublesData.Tags.ITEM_TRINKET)));
     }
 
     public Component getDisplayName() {
