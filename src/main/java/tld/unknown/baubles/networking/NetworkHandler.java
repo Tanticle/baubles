@@ -21,7 +21,6 @@ public final class NetworkHandler {
 
     public static void serverHandleOpenInv(ServerboundOpenBaublesInvPacket packet, IPayloadContext ctx) {
         ServerPlayer player = (ServerPlayer)ctx.player();
-        if(packet.isCustomInv())
-            player.openMenu(new SimpleMenuProvider((id, inv, p) -> new ExpandedInventoryMenu(id, p), Component.translatable("container.crafting")));
+        player.openMenu(new SimpleMenuProvider((id, inv, p) -> new ExpandedInventoryMenu(id, p), Component.translatable("container.crafting")));
     }
 }
