@@ -13,7 +13,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.event.TickEvent;
 import tld.unknown.baubles.Registries;
 import tld.unknown.baubles.TestRingItem;
 import tld.unknown.baubles.api.BaubleType;
@@ -58,11 +57,9 @@ public final class ClientEventHandlers {
     public static final class ForgeBusSubscriber {
 
         @SubscribeEvent
-        public static void clientTick(final TickEvent.ClientTickEvent event) {
-            if(event.phase == TickEvent.Phase.START) {
-                if(BaublesClient.KEY_INVENTORY.consumeClick()) {
-                    Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket(0, 0));
-                }
+        public static void clientTick(final ClientTickEvent.Pre event) {
+            if(BaublesClient.KEY_INVENTORY.consumeClick()) {
+                Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket(0, 0));
             }
         }
 

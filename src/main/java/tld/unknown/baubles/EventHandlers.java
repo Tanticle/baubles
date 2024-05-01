@@ -7,7 +7,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import tld.unknown.baubles.api.*;
@@ -38,15 +38,13 @@ public final class EventHandlers {
     public static final class ForgeBusSubscriber {
 
         @SubscribeEvent
-        public static void playerTick(final TickEvent.PlayerTickEvent event) {
-            if(event.phase == TickEvent.Phase.END) {
-                IBaublesHolder baubles = event.player.getData(Registries.ATTACHMENT_BAUBLES);
-                for (int i = 0; i < IBaublesHolder.INVENTORY_SIZE; i++) {
-                    ItemStack slot = baubles.getAllSlots()[i];
-                    IBauble impl = BaublesAPI.getBaubleImplementation(slot);
-                    if(slot != ItemStack.EMPTY && impl != null) {
-                        impl.onWornTick(BaubleType.bySlotId(i), slot, event.player);
-                    }
+        public static void playerTick(final PlayerTickEvent.Post event) {
+            IBaublesHolder baubles = event.getEntity().getData(Registries.ATTACHMENT_BAUBLES);
+            for (int i = 0; i < IBaublesHolder.INVENTORY_SIZE; i++) {
+                ItemStack slot = baubles.getAllSlots()[i];
+                IBauble impl = BaublesAPI.getBaubleImplementation(slot);
+                if(slot != ItemStack.EMPTY && impl != null) {
+                    impl.onWornTick(BaubleType.bySlotId(i), slot, event.getEntity());
                 }
             }
         }
