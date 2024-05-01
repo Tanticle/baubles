@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'idea'
-    id 'net.neoforged.gradle.userdev' version '7.0.107'
+    id 'net.neoforged.gradle.userdev' version '7.0.116'
 }
 
 version = mod_version
@@ -11,7 +11,7 @@ base { archivesName = mod_id }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-sourceSets { api; main; example; }
+sourceSets { main; example; }
 
 runs {
     configureEach {
@@ -32,10 +32,8 @@ runs {
 
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
-    apiImplementation "net.neoforged:neoforge:${neo_version}"
     exampleImplementation "net.neoforged:neoforge:${neo_version}"
-    implementation sourceSets.api.output
-    exampleImplementation sourceSets.api.output
+    exampleImplementation sourceSets.main.output
 }
 
 tasks.withType(ProcessResources).configureEach {
