@@ -15,6 +15,7 @@ import tld.unknown.baubles.Registries;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.IBaubleRenderer;
+import tld.unknown.baubles.client.BaublesClient;
 
 public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>> {
 
@@ -37,7 +38,7 @@ public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>>
             ItemStack item = holder[i];
             if(item == ItemStack.EMPTY || !BaublesAPI.isBaubleItem(item))
                 continue;
-            IBaubleRenderer renderer = BaublesAPI.getRenderer(item);
+            IBaubleRenderer renderer = BaublesClient.RENDERERS.getRenderer(item);
             if(renderer == null)
                 continue;
 

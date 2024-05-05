@@ -12,7 +12,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import tld.unknown.baubles.api.BaublesAPI;
-import tld.unknown.baubles.api.BaublesData;
 
 @Mod(BaublesExample.MOD_ID)
 public class BaublesExample {
@@ -29,12 +28,12 @@ public class BaublesExample {
         REGISTRY_ITEMS.register(modEventBus);
     }
 
-    @EventBusSubscriber(modid = BaublesData.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static final class ModBusSubscriber {
 
         @SubscribeEvent
         public static void onClientInit(final FMLClientSetupEvent event) {
-            BaublesAPI.registerRenderer(new ResourceLocation(MOD_ID, "ring"), new TestRingItem.TestRenderer());
+            BaublesAPI.getRenderers().registerRenderer(new ResourceLocation(MOD_ID, "ring"), new TestRingItem.TestRenderer());
         }
     }
 }

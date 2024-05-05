@@ -1,17 +1,12 @@
 package tld.unknown.baubles.api;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public final class BaublesAPI {
-
-    private static final Map<ResourceLocation, IBaubleRenderer> renderers = new HashMap<>();
 
     public static boolean hasBaubleImplementation(ItemStack stack) {
         return getBaubleImplementation(stack) != null;
@@ -35,19 +30,14 @@ public final class BaublesAPI {
         return set;
     }
 
-    public static void registerRenderer(ResourceLocation key, IBaubleRenderer renderer) {
-        registerRenderer(key, renderer, false);
+    private static IBaubleRenderers renderers;
+
+    public static IBaubleRenderers getRenderers() {
+        return renderers;
     }
 
-    public static void registerRenderer(ResourceLocation key, IBaubleRenderer renderer, boolean replace) {
-        if(!replace)
-            renderers.putIfAbsent(key, renderer);
-        else
-            renderers.put(key, renderer);
-    }
-
-    public static IBaubleRenderer getRenderer(ItemStack stack) {
-        ResourceLocation loc = BuiltInRegistries.ITEM.getKey(stack.getItem());
-        return renderers.get(loc);
+    @ApiStatus.Internal
+    public static void setRenderHandlers(IBaubleRenderers renderers) {
+        BaublesAPI.renderers = renderers;
     }
 }
