@@ -1,20 +1,19 @@
 package tld.unknown.baubles.client.rendering;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Quaternionf;
 import tld.unknown.baubles.Registries;
-import tld.unknown.baubles.api.*;
+import tld.unknown.baubles.api.BaubleType;
+import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.IBaubleRenderer;
 
 public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>> {

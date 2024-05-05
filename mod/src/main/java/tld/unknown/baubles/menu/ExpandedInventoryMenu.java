@@ -13,11 +13,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import tld.unknown.baubles.BaublesHolderAttachment;
+import tld.unknown.baubles.Registries;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.BaublesData;
-import tld.unknown.baubles.BaublesHolderAttachment;
-import tld.unknown.baubles.Registries;
 import tld.unknown.baubles.api.IBauble;
 
 public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {

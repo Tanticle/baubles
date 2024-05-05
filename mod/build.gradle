@@ -1,0 +1,3 @@
+dependencies {
+    implementation "net.neoforged:neoforge:${parent.neo_version}"
+}

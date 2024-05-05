@@ -14,7 +14,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import tld.unknown.baubles.Registries;
-import tld.unknown.baubles.TestRingItem;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.BaublesData;
@@ -45,11 +44,6 @@ public final class ClientEventHandlers {
                 LivingEntityRenderer<Player, PlayerModel<Player>> r = event.getSkin(s);
                 r.addLayer(new BaublesRenderLayer(r));
             });
-        }
-
-        @SubscribeEvent
-        public static void onClientInit(final FMLClientSetupEvent event) {
-            BaublesAPI.registerRenderer(BaublesData.id("ring"), new TestRingItem.TestRenderer());
         }
     }
 

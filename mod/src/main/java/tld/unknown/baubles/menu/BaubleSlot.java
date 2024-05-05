@@ -7,9 +7,9 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.Nullable;
-import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.BaublesHolderAttachment;
 import tld.unknown.baubles.api.BaubleType;
+import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.IBauble;
 
 public class BaubleSlot extends SlotItemHandler {
