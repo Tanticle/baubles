@@ -13,6 +13,7 @@ allprojects {
     apply plugin: 'net.neoforged.gradle.userdev'
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+    version = mod_version
 }
 
 subprojects {
