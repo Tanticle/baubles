@@ -10,8 +10,11 @@
 ## Organisational Tasks
 
 - Seperate API Module
-- Seperate Test Mod Module
+- Clean Up build script and structure
 - --------------------
 ## Feature Tasks
 
 - BaublesEvent
+- Data-driven slots
+  - Parent data-driven slots to the root slots somehow.
+  - **AVOID SCROLLBARS AND EXTRA SCREENS AT ALL COSTS!**
