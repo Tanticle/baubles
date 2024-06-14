@@ -3,7 +3,3 @@ base {
 }
 
 group = mod_group_id
-
-dependencies {
-    implementation "net.neoforged:neoforge:${parent.neo_version}"
-}

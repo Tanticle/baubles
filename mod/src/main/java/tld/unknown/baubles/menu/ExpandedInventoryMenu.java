@@ -10,8 +10,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import tld.unknown.baubles.BaublesHolderAttachment;
 import tld.unknown.baubles.Registries;
@@ -20,7 +23,7 @@ import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.BaublesData;
 import tld.unknown.baubles.api.IBauble;
 
-public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
+public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
 
     private static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[] {
             InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS,
@@ -83,7 +86,7 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
                 @Override
                 public boolean mayPickup(Player p_39744_) {
                     ItemStack itemstack = this.getItem();
-                    return (itemstack.isEmpty() || p_39744_.isCreative() || !EnchantmentHelper.hasBindingCurse(itemstack)) && super.mayPickup(p_39744_);
+                    return (itemstack.isEmpty() || p_39744_.isCreative() || EnchantmentHelper.has(itemstack, EnchantmentEffectComponents.PREVENT_ARMOR_CHANGE)) && super.mayPickup(p_39744_);
                 }
 
                 @Override
@@ -161,7 +164,7 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
         if (slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
-            EquipmentSlot equipmentslot = Mob.getEquipmentSlotForItem(itemstack);
+            EquipmentSlot equipmentslot = pPlayer.getEquipmentSlotForItem(itemstack);
             if(!(slot instanceof BaubleSlot)) {
                 if(BaublesAPI.isBaubleItem(itemstack1)) {
                     if(itemstack1.is(BaublesData.Tags.ITEM_TRINKET)) {
@@ -208,7 +211,7 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
                 if (!this.moveItemStackTo(itemstack1, 9, 45, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (equipmentslot.getType() == EquipmentSlot.Type.ARMOR && !this.slots.get(8 - equipmentslot.getIndex()).hasItem()) {
+            } else if (equipmentslot.getType() == EquipmentSlot.Type.HUMANOID_ARMOR && !this.slots.get(8 - equipmentslot.getIndex()).hasItem()) {
                 int i = 8 - equipmentslot.getIndex();
                 if (!this.moveItemStackTo(itemstack1, i, i + 1, false)) {
                     return ItemStack.EMPTY;
@@ -267,8 +270,8 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingContainer> {
     }
 
     @Override
-    public boolean recipeMatches(RecipeHolder<? extends Recipe<CraftingContainer>> pRecipe) {
-        return pRecipe.value().matches(this.craftSlots, this.player.level());
+    public boolean recipeMatches(RecipeHolder recipeHolder) {
+        return recipeHolder.value().matches(this.craftSlots.asCraftInput(), this.player.level());
     }
 
     @Override public int getResultSlotIndex() { return 0; }

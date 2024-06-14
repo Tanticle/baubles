@@ -1,9 +1,8 @@
 dependencies {
-    implementation "net.neoforged:neoforge:${parent.neo_version}"
     implementation project(':mod')
 }
 
-runs {
+/*runs {
     configureEach {
         systemProperty 'terminal.ansi', 'true'
         systemProperty 'forge.logging.markers', 'REGISTRIES'
@@ -16,4 +15,20 @@ runs {
     }
     server { systemProperty 'forge.enabledGameTestNamespaces', project.mod_id; programArgument '--nogui' }
     gameTestServer { systemProperty 'forge.enabledGameTestNamespaces', project.mod_id }
+}*/
+
+neoForge {
+    runs {
+        configureEach {
+            systemProperty 'terminal.ansi', 'true'
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'forge.logging.console.level', 'debug'
+        }
+    }
+
+    mods {
+        baubles {
+            sourceSet project(':mod').sourceSets.main
+        }
+    }
 }

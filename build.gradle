@@ -1,14 +1,18 @@
 plugins {
     id 'java-library'
     id 'idea'
-    id 'net.neoforged.gradle.userdev' version '7.0.119'
+    id 'net.neoforged.moddev' version '0.1.74'
 }
 
 allprojects {
-    apply plugin: 'net.neoforged.gradle.userdev'
+    apply plugin: 'net.neoforged.moddev'
 
     java.toolchain.languageVersion = JavaLanguageVersion.of(21)
     version = mod_version
+
+    neoForge {
+        version = neo_version
+    }
 }
 
 subprojects {

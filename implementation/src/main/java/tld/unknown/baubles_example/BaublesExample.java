@@ -33,7 +33,7 @@ public class BaublesExample {
 
         @SubscribeEvent
         public static void onClientInit(final FMLClientSetupEvent event) {
-            BaublesAPI.getRenderers().registerRenderer(new ResourceLocation(MOD_ID, "ring"), new TestRingItem.TestRenderer());
+            BaublesAPI.getRenderers().registerRenderer(ResourceLocation.fromNamespaceAndPath(MOD_ID, "ring"), new TestRingItem.TestRenderer());
         }
     }
 }

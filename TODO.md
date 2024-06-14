@@ -1,5 +1,8 @@
 # TODO
 
+## Bugs
+- Prevent cursor from recentering when opening the Baubles inventory.
+
 ## Cleanup Tasks
 
 - Clean up shiftclick logic
