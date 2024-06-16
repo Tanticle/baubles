@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'idea'
-    id 'net.neoforged.moddev' version '0.1.74'
+    id 'net.neoforged.moddev' version '0.1.78'
 }
 
 allprojects {
@@ -27,10 +27,11 @@ subprojects {
                 mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
                 mod_authors: mod_authors, mod_description: mod_description, mod_credits: credits
         ]
+
         inputs.properties replaceProperties
 
         filesMatching(['META-INF/neoforge.mods.toml']) {
-            expand replaceProperties + [project: project]
+            expand replaceProperties
         }
     }
 
