@@ -1,4 +1,4 @@
-package tld.unknown.baubles_example;
+package tld.unknown.baubles;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
