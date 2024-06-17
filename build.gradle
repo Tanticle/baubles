@@ -23,13 +23,18 @@ neoForge {
             systemProperty 'terminal.ansi', 'true'
             systemProperty 'forge.logging.console.level', 'debug'
         }
-        client { client() }
+        client {
+            client()
+            sourceSet = sourceSets.example
+        }
     }
 
     mods {
         baubles {
             sourceSet sourceSets.main
             sourceSet sourceSets.api
+        }
+        baubles_example {
             sourceSet sourceSets.example
         }
     }
@@ -37,7 +42,10 @@ neoForge {
 
 dependencies {
     implementation sourceSets.api.output
+
     exampleImplementation sourceSets.api.output
+    exampleImplementation sourceSets.main.output
+    exampleRuntimeOnly sourceSets.main.output
 }
 
 tasks.withType(ProcessResources).configureEach {

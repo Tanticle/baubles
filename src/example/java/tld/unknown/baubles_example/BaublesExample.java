@@ -1,6 +1,7 @@
-package tld.unknown.baubles;
+package tld.unknown.baubles_example;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -13,26 +14,26 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.BaublesData;
 
-@Mod(BaublesData.MOD_ID)
+@Mod("baubles_example")
 public class BaublesExample {
 
-    private static final DeferredRegister<Item> REGISTRY_ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, BaublesData.MOD_ID);
+    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("baubles_example", "ring");
+    private static final DeferredRegister<Item> REGISTRY_ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, ID.getNamespace());
 
     public static final DeferredHolder<Item, TestRingItem> ITEM_RING = REGISTRY_ITEMS.register(
-            "ring",
+            ID.getPath(),
             TestRingItem::new);
 
     public BaublesExample(IEventBus modEventBus) {
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         REGISTRY_ITEMS.register(modEventBus);
     }
 
-    @EventBusSubscriber(modid = BaublesData.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = "baubles_example", bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static final class ModBusSubscriber {
 
         @SubscribeEvent
         public static void onClientInit(final FMLClientSetupEvent event) {
-            BaublesAPI.getRenderers().registerRenderer(BaublesData.id("ring"), new TestRingItem.TestRenderer());
+            BaublesAPI.getRenderers().registerRenderer(ID, new TestRingItem.TestRenderer());
         }
     }
 }

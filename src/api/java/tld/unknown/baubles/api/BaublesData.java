@@ -20,13 +20,13 @@ public final class BaublesData {
 
     public static final class Tags {
 
-        public static final TagKey<Item> ITEM_AMULET = item("baubles/amulet");
-        public static final TagKey<Item> ITEM_RING = item("baubles/ring");
-        public static final TagKey<Item> ITEM_BELT = item("baubles/belt");
-        public static final TagKey<Item> ITEM_HEAD = item("baubles/head");
-        public static final TagKey<Item> ITEM_BODY = item("baubles/body");
-        public static final TagKey<Item> ITEM_CHARM = item("baubles/charm");
-        public static final TagKey<Item> ITEM_TRINKET = item("baubles/any");
+        public static final TagKey<Item> ITEM_AMULET = item("amulet");
+        public static final TagKey<Item> ITEM_RING = item("ring");
+        public static final TagKey<Item> ITEM_BELT = item("belt");
+        public static final TagKey<Item> ITEM_HEAD = item("head");
+        public static final TagKey<Item> ITEM_BODY = item("body");
+        public static final TagKey<Item> ITEM_CHARM = item("charm");
+        public static final TagKey<Item> ITEM_TRINKET = item("any");
 
         private static TagKey<Item> item(String path) {
             return TagKey.create(Registries.ITEM, id(path));
