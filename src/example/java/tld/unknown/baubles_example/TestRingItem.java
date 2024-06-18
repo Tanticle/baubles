@@ -36,8 +36,8 @@ public class TestRingItem extends Item implements IBauble {
         @Override
         public void renderHead(PoseStack pose, MultiBufferSource bufferSource, int packetLight, float deltaTick, Player p, ItemStack stack, BaubleType slot) {
             if(slot == BaubleType.HEAD) {
-                float width = pixelToUnit(8.5F);
-                float downOffset = pixelToUnit(0.25F);
+                float width = Helper.pixelToUnit(8.5F);
+                float downOffset = Helper.pixelToUnit(0.25F);
                 pose.translate(-width / 2, downOffset, -width / 2);
                 VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
                 LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -width, width, 1F, 1F, 1F, 0.5F);
@@ -47,10 +47,10 @@ public class TestRingItem extends Item implements IBauble {
         @Override
         public void renderBody(PoseStack pose, MultiBufferSource bufferSource, int packetLight, float deltaTick, Player p, ItemStack stack, BaubleType slot) {
             if (slot == BaubleType.BODY) {
-                float width = pixelToUnit(8.5F);
-                float depth = pixelToUnit(4.5F);
-                float height = pixelToUnit(12.5F);
-                float downOffset = pixelToUnit(0.25F);
+                float width = Helper.pixelToUnit(8.5F);
+                float depth = Helper.pixelToUnit(4.5F);
+                float height = Helper.pixelToUnit(12.5F);
+                float downOffset = Helper.pixelToUnit(0.25F);
                 pose.translate(-width / 2, downOffset, -depth / 2);
                 VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
                 LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, depth, 1F, 1F, 1F, 0.5F);
@@ -58,49 +58,26 @@ public class TestRingItem extends Item implements IBauble {
         }
 
         @Override
-        public void renderArm(PoseStack pose, MultiBufferSource bufferSource, int packetLight, float deltaTick, HumanoidArm arm, Player p, ItemStack stack, BaubleType slot) {
-            if(slot == BaubleType.RING_LEFT && arm == HumanoidArm.LEFT) {
-                float width = pixelToUnit(4.5F);
-                float height = pixelToUnit(12.5F);
-                float downOffset = pixelToUnit(0.25F);
-                pose.translate(-width / 2, downOffset, -width / 2);
-                VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
-                LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, width, 1F, 1F, 1F, 0.5F);
-            }
-
-            if(slot == BaubleType.RING_RIGHT && arm == HumanoidArm.RIGHT) {
-                float width = pixelToUnit(4.5F);
-                float height = pixelToUnit(12.5F);
-                float downOffset = pixelToUnit(0.25F);
-                pose.translate(-width / 2, downOffset, -width / 2);
-                VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
-                LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, width, 1F, 1F, 1F, 0.5F);
+        public void renderArm(PoseStack pose, MultiBufferSource bufferSource, int packetLight, float deltaTick, HumanoidArm arm, boolean isThin, Player p, ItemStack stack, BaubleType slot) {
+            if((slot == BaubleType.RING_LEFT && arm == HumanoidArm.LEFT) || (slot == BaubleType.RING_RIGHT && arm == HumanoidArm.RIGHT)) {
+                renderModelPart(bufferSource, pose, Helper.pixelToUnit(isThin ? 3.5F : 4.5F));
             }
         }
 
         @Override
         public void renderLeg(PoseStack pose, MultiBufferSource bufferSource, int packetLight, float deltaTick, HumanoidLeg leg, Player p, ItemStack stack, BaubleType slot) {
-            if(slot == BaubleType.BELT && leg == HumanoidLeg.LEFT) {
-                float width = pixelToUnit(4.5F);
-                float height = pixelToUnit(12.5F);
-                float downOffset = pixelToUnit(0.25F);
-                pose.translate(-width / 2, downOffset, -width / 2);
-                VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
-                LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, width, 1F, 1F, 1F, 0.5F);
-            }
-
-            if(slot == BaubleType.BELT && leg == HumanoidLeg.RIGHT) {
-                float width = pixelToUnit(4.5F);
-                float height = pixelToUnit(12.5F);
-                float downOffset = pixelToUnit(0.25F);
-                pose.translate(-width / 2, downOffset, -width / 2);
-                VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
-                LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, width, 1F, 1F, 1F, 0.5F);
+            if(slot == BaubleType.BELT) {
+                renderModelPart(bufferSource, pose, Helper.pixelToUnit(4.5F));
             }
         }
 
-        private float pixelToUnit(float pixels) {
-            return 1F / 16 * pixels;
+        private void renderModelPart(MultiBufferSource bufferSource, PoseStack pose, float width) {
+            float depth = Helper.pixelToUnit(4.5F);
+            float height = Helper.pixelToUnit(12.5F);
+            float downOffset = Helper.pixelToUnit(0.25F);
+            pose.translate(-width / 2, downOffset, -depth / 2);
+            VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
+            LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, depth, 1F, 1F, 1F, 0.5F);
         }
     }
 }

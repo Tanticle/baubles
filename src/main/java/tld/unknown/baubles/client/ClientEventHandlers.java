@@ -1,10 +1,17 @@
 package tld.unknown.baubles.client;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.minecraft.client.MinecraftClient;
+import com.mojang.authlib.properties.PropertyMap;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -87,5 +94,18 @@ public final class ClientEventHandlers {
                 }
             }
         }
+
+        /*@SubscribeEvent
+        public static void onArmRenderer(final RenderArmEvent event) {
+            float width = pixelToUnit(4.5F);
+            float height = pixelToUnit(12.5F);
+            float downOffset = pixelToUnit(0.25F);
+            VertexConsumer consumer = event.getMultiBufferSource().getBuffer(RenderType.debugFilledBox());
+            LevelRenderer.addChainedFilledBoxVertices(event.getPoseStack(), consumer, 0, 0, 0, 1, 1, 1, 1F, 1F, 1F, 0.5F);
+        }
+
+        /*private static float pixelToUnit(float pixels) {
+            return 1F / 16 * pixels;
+        }*/
     }
 }

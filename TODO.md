@@ -11,8 +11,11 @@
 - --------------------
 ## Feature Tasks
 - BaublesEvent
-- First-person arm rendering
-- Thin VS thick arm rendering
+- Rendering
+  - More Helper Methods
+    - Eye-level offset
+  - Debug Renderer for marking origin points of Baubles
+  - First-person arm rendering
 - Data-driven slots
   - Parent data-driven slots to the root slots somehow.
   - **AVOID SCROLLBARS AND EXTRA SCREENS AT ALL COSTS!**

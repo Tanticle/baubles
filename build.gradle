@@ -23,8 +23,14 @@ neoForge {
             systemProperty 'terminal.ansi', 'true'
             systemProperty 'forge.logging.console.level', 'debug'
         }
-        client {
+        ClientThinArm {
             client()
+            programArguments =  ['--username', 'Dev']
+            sourceSet = sourceSets.example
+        }
+        ClientThickArm {
+            client()
+            programArguments =  ['--username', 'Dev2']
             sourceSet = sourceSets.example
         }
     }

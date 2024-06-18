@@ -3,9 +3,11 @@ package tld.unknown.baubles.client.rendering;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
@@ -19,10 +21,7 @@ import tld.unknown.baubles.client.BaublesClient;
 
 public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>> {
 
-    private static final float FEET_OFFSET = 1.5F;
-    private static final float FEET_X_OFFSET = 0.125F;
     private static final float BODY_OFFSET = 0.75F;
-    private static final float ARM_X_OFFSET = 0.375F;
 
     public BaublesRenderLayer(RenderLayerParent<Player, PlayerModel<Player>> pRenderer) {
         super(pRenderer);
@@ -59,29 +58,33 @@ public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>>
             pPoseStack.popPose();
 
             // Arms
-            dispatchArm(pPoseStack, pBuffer, pLimbSwing, pLimbSwingAmount, pPackedLight, pPartialTick, pLivingEntity, HumanoidArm.LEFT, renderer, item, slot);
-            dispatchArm(pPoseStack, pBuffer, pLimbSwing, pLimbSwingAmount, pPackedLight, pPartialTick, pLivingEntity, HumanoidArm.RIGHT, renderer, item, slot);
+            dispatchArm(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, HumanoidArm.LEFT, renderer, item, slot);
+            dispatchArm(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, HumanoidArm.RIGHT, renderer, item, slot);
 
             // Legs
-            dispatchLeg(pPoseStack, pBuffer, pLimbSwing, pLimbSwingAmount, pPackedLight, pPartialTick, pLivingEntity, IBaubleRenderer.HumanoidLeg.LEFT, renderer, item, slot);
-            dispatchLeg(pPoseStack, pBuffer, pLimbSwing, pLimbSwingAmount, pPackedLight, pPartialTick, pLivingEntity, IBaubleRenderer.HumanoidLeg.RIGHT, renderer, item, slot);
+            dispatchLeg(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, IBaubleRenderer.HumanoidLeg.LEFT, renderer, item, slot);
+            dispatchLeg(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, IBaubleRenderer.HumanoidLeg.RIGHT, renderer, item, slot);
         }
     }
 
-    private static final float ARM_Y_OFFSET = pixelToUnit(10);
+    private static final float ARM_Y_OFFSET = IBaubleRenderer.Helper.pixelToUnit(10);
+    private static final float THIN_ARM_X_OFFSET = IBaubleRenderer.Helper.pixelToUnit(0.5F);
+    private static final float THICK_ARM_X_OFFSET = IBaubleRenderer.Helper.pixelToUnit(1F);
 
-    private void dispatchArm(PoseStack pose, MultiBufferSource buffer, float limbSwing, float limbSwingAmount, int packedLight, float delta, Player player, HumanoidArm arm, IBaubleRenderer renderer, ItemStack item, BaubleType type) {
+    private void dispatchArm(PoseStack pose, MultiBufferSource buffer, int packedLight, float delta, Player player, HumanoidArm arm, IBaubleRenderer renderer, ItemStack item, BaubleType type) {
         ModelPart part = arm == HumanoidArm.RIGHT ? getParentModel().rightArm : getParentModel().leftArm;
+        boolean isThin = ((AbstractClientPlayer)player).getSkin().model() == PlayerSkin.Model.SLIM;
         pose.pushPose();
         translateAndRotate(pose, part);
-        pose.translate(0, ARM_Y_OFFSET, 0);
-        renderer.renderArm(pose, buffer, packedLight, delta, arm, player, item, type);
+        float xOffset = isThin ? (arm == HumanoidArm.RIGHT ? -THIN_ARM_X_OFFSET : THIN_ARM_X_OFFSET) : (arm == HumanoidArm.RIGHT ? -THICK_ARM_X_OFFSET : THICK_ARM_X_OFFSET);
+        pose.translate(xOffset, ARM_Y_OFFSET, 0);
+        renderer.renderArm(pose, buffer, packedLight, delta, arm, isThin, player, item, type);
         pose.popPose();
     }
 
-    private static final float LEG_Y_OFFSET = pixelToUnit(12);
+    private static final float LEG_Y_OFFSET = IBaubleRenderer.Helper.pixelToUnit(12);
 
-    private void dispatchLeg(PoseStack pose, MultiBufferSource buffer, float limbSwing, float limbSwingAmount, int packedLight, float delta, Player player, IBaubleRenderer.HumanoidLeg leg, IBaubleRenderer renderer, ItemStack item, BaubleType type) {
+    private void dispatchLeg(PoseStack pose, MultiBufferSource buffer, int packedLight, float delta, Player player, IBaubleRenderer.HumanoidLeg leg, IBaubleRenderer renderer, ItemStack item, BaubleType type) {
         ModelPart part = leg == IBaubleRenderer.HumanoidLeg.RIGHT ? getParentModel().rightLeg : getParentModel().leftLeg;
         pose.pushPose();
         translateAndRotate(pose, part);
@@ -95,9 +98,5 @@ public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>>
         if (part.xRot != 0.0F || part.yRot != 0.0F || part.zRot != 0.0F) {
             pose.mulPose(new Quaternionf().rotationZYX(part.zRot, part.yRot, part.xRot));
         }
-    }
-
-    private static float pixelToUnit(float pixels) {
-        return 1F / 16 * pixels;
     }
 }
