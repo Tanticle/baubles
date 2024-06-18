@@ -27,6 +27,7 @@ import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.BaublesData;
 import tld.unknown.baubles.client.gui.BaublesButton;
 import tld.unknown.baubles.client.gui.ExpandedInventoryScreen;
+import tld.unknown.baubles.client.rendering.BaubleRenderers;
 import tld.unknown.baubles.client.rendering.BaublesRenderLayer;
 import tld.unknown.baubles.networking.ServerboundOpenBaublesInvPacket;
 
@@ -39,6 +40,7 @@ public final class ClientEventHandlers {
         @SubscribeEvent
         public static void registerKeybinds(final RegisterKeyMappingsEvent event) {
             event.register(BaublesClient.KEY_INVENTORY);
+            event.register(BaublesClient.KEY_DEBUG);
         }
 
         @SubscribeEvent
@@ -67,6 +69,9 @@ public final class ClientEventHandlers {
         public static void clientTick(final ClientTickEvent.Pre event) {
             if(BaublesClient.KEY_INVENTORY.consumeClick()) {
                 Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket(0, 0));
+            }
+            if(BaublesClient.KEY_DEBUG.consumeClick()) {
+                ((BaubleRenderers)BaublesAPI.getRenderers()).toggleRenderDebugMode();
             }
         }
 

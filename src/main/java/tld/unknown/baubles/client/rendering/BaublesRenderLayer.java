@@ -47,6 +47,8 @@ public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>>
             pPoseStack.pushPose();
             ModelPart head = getParentModel().head;
             translateAndRotate(pPoseStack, head);
+            if(isDebugRendering())
+                IBaubleRenderer.Helper.renderPoseOriginMarker(pBuffer, pPoseStack, 1F, 0F, 0F, 0.5F);
             renderer.renderHead(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, item, slot);
             pPoseStack.popPose();
             // Body
@@ -54,6 +56,8 @@ public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>>
             ModelPart body = getParentModel().body;
             translateAndRotate(pPoseStack, body);
             pPoseStack.translate(0, BODY_OFFSET, 0);
+            if(isDebugRendering())
+                IBaubleRenderer.Helper.renderPoseOriginMarker(pBuffer, pPoseStack, 1F, 0F, 0F, 0.5F);
             renderer.renderBody(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, item, slot);
             pPoseStack.popPose();
 
@@ -78,6 +82,8 @@ public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>>
         translateAndRotate(pose, part);
         float xOffset = isThin ? (arm == HumanoidArm.RIGHT ? -THIN_ARM_X_OFFSET : THIN_ARM_X_OFFSET) : (arm == HumanoidArm.RIGHT ? -THICK_ARM_X_OFFSET : THICK_ARM_X_OFFSET);
         pose.translate(xOffset, ARM_Y_OFFSET, 0);
+        if(isDebugRendering())
+            IBaubleRenderer.Helper.renderPoseOriginMarker(buffer, pose, 1F, 0F, 0F, 0.5F);
         renderer.renderArm(pose, buffer, packedLight, delta, arm, isThin, player, item, type);
         pose.popPose();
     }
@@ -89,6 +95,8 @@ public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>>
         pose.pushPose();
         translateAndRotate(pose, part);
         pose.translate(0, LEG_Y_OFFSET, 0);
+        if(isDebugRendering())
+            IBaubleRenderer.Helper.renderPoseOriginMarker(buffer, pose, 1F, 0F, 0F, 0.5F);
         renderer.renderLeg(pose, buffer, packedLight, delta, leg, player, item, type);
         pose.popPose();
     }
@@ -98,5 +106,9 @@ public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>>
         if (part.xRot != 0.0F || part.yRot != 0.0F || part.zRot != 0.0F) {
             pose.mulPose(new Quaternionf().rotationZYX(part.zRot, part.yRot, part.xRot));
         }
+    }
+
+    private boolean isDebugRendering() {
+        return ((BaubleRenderers)BaublesAPI.getRenderers()).renderDebugMode;
     }
 }
