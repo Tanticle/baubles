@@ -4,7 +4,10 @@ plugins {
     id 'net.neoforged.moddev' version '0.1.91'
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
 
 group = mod_group_id
 base { archivesName = mod_id }
@@ -48,6 +51,7 @@ neoForge {
 
 dependencies {
     implementation sourceSets.api.output
+    runtimeOnly sourceSets.api.output
 
     exampleImplementation sourceSets.api.output
     exampleImplementation sourceSets.main.output
@@ -71,6 +75,8 @@ tasks.withType(ProcessResources).configureEach {
 }
 
 tasks.withType(Jar).configureEach {
+    from sourceSets.api.output
+
     from(project.rootDir) {
         include 'LICENSE'
     }

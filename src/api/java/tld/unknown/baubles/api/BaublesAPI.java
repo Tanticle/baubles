@@ -8,6 +8,8 @@ import java.util.List;
 
 public final class BaublesAPI {
 
+    public static final String API_VERSION = "pre_1.0";
+
     public static boolean hasBaubleImplementation(ItemStack stack) {
         return getBaubleImplementation(stack) != null;
     }

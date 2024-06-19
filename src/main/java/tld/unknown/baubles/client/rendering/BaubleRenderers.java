@@ -5,7 +5,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.loading.FMLLoader;
 import tld.unknown.baubles.api.IBaubleRenderer;
 import tld.unknown.baubles.api.IBaubleRenderers;
 
@@ -40,8 +39,6 @@ public class BaubleRenderers implements IBaubleRenderers {
     }
 
     public void toggleRenderDebugMode() {
-        if(FMLLoader.isProduction())
-            return;
         renderDebugMode = !renderDebugMode;
         Minecraft.getInstance().player.sendSystemMessage(Component.translatable("msg.baubles.debug_" + (renderDebugMode ? "on" : "off")));
     }

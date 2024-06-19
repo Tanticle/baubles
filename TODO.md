@@ -12,9 +12,7 @@
 ## Feature Tasks
 - BaublesEvent
 - Rendering
-  - More Helper Methods
-    - Eye-level offset
-  - Debug Renderer for marking origin points of Baubles
+  - Debug renderer should become translucent.
   - First-person arm rendering
 - Data-driven slots
   - Parent data-driven slots to the root slots somehow.

@@ -12,7 +12,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import tld.unknown.baubles.api.BaublesAPI;
-import tld.unknown.baubles.api.BaublesData;
 
 @Mod("baubles_example")
 public class BaublesExample {

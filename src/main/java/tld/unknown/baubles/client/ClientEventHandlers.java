@@ -1,17 +1,10 @@
 package tld.unknown.baubles.client;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.minecraft.client.MinecraftClient;
-import com.mojang.authlib.properties.PropertyMap;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.PlayerModel;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -20,6 +13,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.client.event.*;
 import tld.unknown.baubles.Registries;
 import tld.unknown.baubles.api.BaubleType;
@@ -40,7 +34,8 @@ public final class ClientEventHandlers {
         @SubscribeEvent
         public static void registerKeybinds(final RegisterKeyMappingsEvent event) {
             event.register(BaublesClient.KEY_INVENTORY);
-            event.register(BaublesClient.KEY_DEBUG);
+            if(!FMLLoader.isProduction())
+                event.register(BaublesClient.KEY_DEBUG);
         }
 
         @SubscribeEvent
