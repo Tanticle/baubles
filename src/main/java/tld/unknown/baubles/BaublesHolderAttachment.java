@@ -8,6 +8,8 @@ import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.IBaublesHolder;
 import tld.unknown.baubles.networking.ClientboundSyncDataPacket;
 
+import java.util.List;
+
 public class BaublesHolderAttachment extends ItemStackHandler implements IBaublesHolder {
 
     public static final int INVENTORY_SIZE = 7;
@@ -38,7 +40,14 @@ public class BaublesHolderAttachment extends ItemStackHandler implements IBauble
     @Override
     protected void onContentsChanged(int slot) {
         if(!player.level().isClientSide()) {
-            ((ServerPlayer)player).connection.send(new ClientboundSyncDataPacket(this.serializeNBT(this.getPlayer().registryAccess())));
+            ((ServerPlayer)player).connection.send(new ClientboundSyncDataPacket(player.getData(Registries.ATTACHMENT_BAUBLES).stacks));
+        }
+    }
+
+    public void updateSlots(List<ItemStack> stacks) {
+        for(int i = 0; i < INVENTORY_SIZE; i++) {
+            ItemStack stack = stacks.get(i);
+            setStackInSlot(i, stack != null ? stack : ItemStack.EMPTY);
         }
     }
 

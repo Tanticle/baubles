@@ -36,6 +36,10 @@ neoForge {
             programArguments =  ['--username', 'Dev2']
             sourceSet = sourceSets.example
         }
+        Server {
+            server()
+            sourceSet = sourceSets.example
+        }
     }
 
     mods {

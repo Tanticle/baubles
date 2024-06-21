@@ -10,7 +10,7 @@ public record ServerboundOpenBaublesInvPacket(float mouseX, float mouseY) implem
 
     public static final Type<ServerboundOpenBaublesInvPacket> TYPE = new Type<>(BaublesData.Networking.OPEN_INV);
 
-    public static final StreamCodec<FriendlyByteBuf, ServerboundOpenBaublesInvPacket> CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, ServerboundOpenBaublesInvPacket> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.FLOAT, ServerboundOpenBaublesInvPacket::mouseX,
             ByteBufCodecs.FLOAT, ServerboundOpenBaublesInvPacket::mouseY,
             ServerboundOpenBaublesInvPacket::new);

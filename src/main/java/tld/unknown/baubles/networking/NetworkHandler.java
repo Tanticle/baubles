@@ -1,6 +1,5 @@
 package tld.unknown.baubles.networking;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
@@ -13,9 +12,9 @@ public final class NetworkHandler {
 
     public static void clientHandleDataSync(ClientboundSyncDataPacket packet, IPayloadContext ctx) {
         ctx.enqueueWork(() -> {
-            BaublesHolderAttachment cap = new BaublesHolderAttachment(Minecraft.getInstance().player);
-            cap.deserializeNBT(ctx.player().registryAccess(), packet.data());
-            Minecraft.getInstance().player.setData(Registries.ATTACHMENT_BAUBLES, cap);
+            BaublesHolderAttachment cap = new BaublesHolderAttachment(ctx.player());
+            cap.updateSlots(packet.data());
+            ctx.player().setData(Registries.ATTACHMENT_BAUBLES, cap);
         });
     }
 

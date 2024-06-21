@@ -6,7 +6,6 @@
 ## Cleanup Tasks
 - Clean up shiftclick logic
     - Move unequip to slot?
-- Use Stream Codec for Inventory Sync
 - Better stackable bauble handling
 - --------------------
 ## Feature Tasks

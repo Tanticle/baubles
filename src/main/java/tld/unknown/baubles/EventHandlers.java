@@ -15,6 +15,8 @@ import tld.unknown.baubles.networking.ClientboundSyncDataPacket;
 import tld.unknown.baubles.networking.NetworkHandler;
 import tld.unknown.baubles.networking.ServerboundOpenBaublesInvPacket;
 
+import java.util.Arrays;
+
 public final class EventHandlers {
 
     @EventBusSubscriber(modid = BaublesData.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
@@ -24,8 +26,8 @@ public final class EventHandlers {
         public static void registerPackets(final RegisterPayloadHandlersEvent event) {
             final PayloadRegistrar registrar = event.registrar(BaublesData.MOD_ID);
             registrar.versioned(BaublesData.Networking.VERSION);
-            registrar.commonToClient(ClientboundSyncDataPacket.TYPE, ClientboundSyncDataPacket.CODEC, NetworkHandler::clientHandleDataSync);
-            registrar.playToServer(ServerboundOpenBaublesInvPacket.TYPE, ServerboundOpenBaublesInvPacket.CODEC, NetworkHandler::serverHandleOpenInv);
+            registrar.playToClient(ClientboundSyncDataPacket.TYPE, ClientboundSyncDataPacket.STREAM_CODEC, NetworkHandler::clientHandleDataSync);
+            registrar.playToServer(ServerboundOpenBaublesInvPacket.TYPE, ServerboundOpenBaublesInvPacket.STREAM_CODEC, NetworkHandler::serverHandleOpenInv);
         }
 
         @SubscribeEvent
@@ -49,7 +51,6 @@ public final class EventHandlers {
             }
         }
 
-
         @SubscribeEvent
         public static void datapackSync(final OnDatapackSyncEvent event) {
             event.getRelevantPlayers().forEach(player -> {
@@ -61,7 +62,7 @@ public final class EventHandlers {
                         player.addItem(itemCopy);
                     }
                 }
-                player.connection.send(new ClientboundSyncDataPacket(holder.serializeNBT(player.level().registryAccess())));
+                player.connection.send(new ClientboundSyncDataPacket(Arrays.asList(holder.getAllSlots())));
             });
         }
     }
