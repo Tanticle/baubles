@@ -8,7 +8,7 @@ import net.neoforged.fml.event.IModBusEvent;
 
 /**
  * A collection of events related to Baubles.
- * Unused for now, may implement it if there is demand.
+ * Unused for now.
  */
 public class BaubleEvent extends Event implements IModBusEvent {
 

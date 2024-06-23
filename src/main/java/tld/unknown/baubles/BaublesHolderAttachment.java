@@ -4,6 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
+import org.jetbrains.annotations.NotNull;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.IBaublesHolder;
 import tld.unknown.baubles.networking.ClientboundSyncDataPacket;
@@ -54,12 +55,12 @@ public class BaublesHolderAttachment extends ItemStackHandler implements IBauble
     // IBaubleCapability
 
     @Override
-    public ItemStack getBaubleInSlot(BaubleType type) {
+    public ItemStack getBaubleInSlot(@NotNull BaubleType type) {
         return getStackInSlot(type.ordinal());
     }
 
     @Override
-    public boolean setBaubleInSlot(BaubleType type, ItemStack stack) {
+    public boolean setBaubleInSlot(@NotNull BaubleType type, @NotNull ItemStack stack) {
         int slot = type.ordinal();
         if(!isItemValid(slot, stack))
             return false;

@@ -5,6 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import tld.unknown.baubles.api.IBaubleRenderer;
 import tld.unknown.baubles.api.IBaubleRenderers;
 
@@ -26,16 +27,16 @@ public class BaubleRenderers implements IBaubleRenderers {
     }
 
     @Override
-    public void registerRenderer(ResourceLocation key, IBaubleRenderer renderer, boolean replace) {
+    public void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer) {
+        registerRenderer(key, renderer, false);
+    }
+
+    @Override
+    public void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer, boolean replace) {
         if(!replace)
             renderers.putIfAbsent(key, renderer);
         else
             renderers.put(key, renderer);
-    }
-
-    @Override
-    public void registerRenderer(ResourceLocation key, IBaubleRenderer renderer) {
-        registerRenderer(key, renderer, false);
     }
 
     public void toggleRenderDebugMode() {

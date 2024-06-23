@@ -5,9 +5,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.capabilities.ItemCapability;
+import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * A static utility class providing all sorts of constants and values for Baubles 2
+ * @author Tom Tanticle
+ */
 public final class BaublesData {
 
+    /**
+     * The mod id for Baubles 2.
+     */
     public static final String MOD_ID = "baubles";
 
     public static final class CapabilitiesAttachments {
@@ -18,6 +26,10 @@ public final class BaublesData {
         public static final ItemCapability<IBauble, Void> CAPABILITY_BAUBLE = ItemCapability.createVoid(ID_CAPABILITY_BAUBLE, IBauble.class);
     }
 
+    /**
+     * Slot assignment {@link TagKey} definitions for Baubles 2.
+     * @see <a href=https://github.com/Tanticle/baubles/wiki/Datapack-Configuration>Baubles 2 Wiki on Datapack Configuration</a>
+     */
     public static final class Tags {
 
         public static final TagKey<Item> ITEM_AMULET = item("amulet");
@@ -33,6 +45,9 @@ public final class BaublesData {
         }
     }
 
+    /**
+     * Texture path constants as {@link ResourceLocation} for Baubles 2.
+     */
     public static final class Textures {
 
         public static final ResourceLocation PLACEHOLDER_AMULET = id("item/slot_amulet");
@@ -46,14 +61,16 @@ public final class BaublesData {
         public static final ResourceLocation UI_BAUBLES_BUTTON = id("textures/gui/baubles_button.png");
     }
 
+    /**
+     * Network Packet ids as {@link ResourceLocation} for Baubles 2.
+     */
     public static final class Networking {
-
-        public static final String VERSION = "1.0.0";
 
         public static final ResourceLocation SYNC_DATA = id("sync_data");
         public static final ResourceLocation OPEN_INV = id("open_inv");
     }
 
+    @ApiStatus.Internal
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
