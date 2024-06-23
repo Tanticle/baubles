@@ -25,7 +25,7 @@ public final class EventHandlers {
         @SubscribeEvent
         public static void registerPackets(final RegisterPayloadHandlersEvent event) {
             final PayloadRegistrar registrar = event.registrar(BaublesData.MOD_ID);
-            registrar.versioned(BaublesData.Networking.VERSION);
+            registrar.versioned(BaublesData.API_VERSION);
             registrar.playToClient(ClientboundSyncDataPacket.TYPE, ClientboundSyncDataPacket.STREAM_CODEC, NetworkHandler::clientHandleDataSync);
             registrar.playToServer(ServerboundOpenBaublesInvPacket.TYPE, ServerboundOpenBaublesInvPacket.STREAM_CODEC, NetworkHandler::serverHandleOpenInv);
         }

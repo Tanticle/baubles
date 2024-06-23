@@ -15,9 +15,12 @@ import java.util.List;
  */
 public final class BaublesAPI {
 
-    public static final String API_VERSION = "pre_1.0";
-
-    public static boolean hasBaubleImplementation(ItemStack stack) {
+    /**
+     * Whether the {@link ItemStack} has an {@link IBauble} implementation via the interface or capability.
+     * @param stack The {@link ItemStack} to check.
+     * @return Whether the {@link ItemStack} has an {@link IBauble} implementation.
+     */
+    public static boolean hasBaubleImplementation(@NotNull ItemStack stack) {
         return getBaubleImplementation(stack) != null;
     }
 

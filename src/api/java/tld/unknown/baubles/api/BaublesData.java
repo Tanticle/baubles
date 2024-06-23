@@ -18,6 +18,14 @@ public final class BaublesData {
      */
     public static final String MOD_ID = "baubles";
 
+    /**
+     * The current API version. As long as the API version matches, mismatching versions of the mod will work.
+     */
+    public static final String API_VERSION = "pre_1.0";
+
+    /**
+     * {@link ResourceLocation} ids and {@link ItemCapability} definitions for Baubles 2.
+     */
     public static final class CapabilitiesAttachments {
 
         public static final ResourceLocation ID_ATTACHMENT_BAUBLES = id("baubles");
