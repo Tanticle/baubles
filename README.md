@@ -4,5 +4,5 @@ Baubles 2 is a from-scratch continuation of the original [Baubles by Azanor13](h
 
 ## Gradle
 
-[CurseMaven](https://cursemaven.com/) is recommended when adding Baubles 2 to your project. The dependency string for the latest version (Minecraft 1.21, Baubles 2 Pre-Release 0.2) is:
+[CurseMaven](https://cursemaven.com/) is recommended when adding Baubles 2 to your project. The dependency string for the latest version (Minecraft 1.21, Baubles 2 Pre-Release 0.3) is:
 > **curse.maven:baubles_2-1040353:5460902-sources-5460905**
