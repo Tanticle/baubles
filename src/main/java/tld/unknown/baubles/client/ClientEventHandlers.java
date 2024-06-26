@@ -9,10 +9,8 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.client.event.*;
 import tld.unknown.baubles.Registries;
@@ -49,11 +47,6 @@ public final class ClientEventHandlers {
                 LivingEntityRenderer<Player, PlayerModel<Player>> r = event.getSkin(s);
                 r.addLayer(new BaublesRenderLayer(r));
             });
-        }
-
-        @SubscribeEvent(priority = EventPriority.HIGHEST)
-        public static void onClientSetup(final FMLClientSetupEvent event) {
-            BaublesAPI.setRenderHandlers(BaublesClient.RENDERERS);
         }
     }
 
