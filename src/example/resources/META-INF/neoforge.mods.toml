@@ -27,6 +27,6 @@ side="BOTH"
 [[dependencies."baubles_example"]]
 modId="baubles"
 type="required"
-versionRange="[0.4]"
+versionRange="[0.5]"
 ordering="NONE"
 side="BOTH"
