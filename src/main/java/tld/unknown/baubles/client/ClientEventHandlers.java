@@ -2,11 +2,15 @@ package tld.unknown.baubles.client;
 
 import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -21,6 +25,7 @@ import tld.unknown.baubles.client.gui.BaublesButton;
 import tld.unknown.baubles.client.gui.ExpandedInventoryScreen;
 import tld.unknown.baubles.client.rendering.BaubleRenderers;
 import tld.unknown.baubles.client.rendering.BaublesRenderLayer;
+import tld.unknown.baubles.menu.ExpandedInventoryMenu;
 import tld.unknown.baubles.networking.ServerboundOpenBaublesInvPacket;
 
 
@@ -38,14 +43,20 @@ public final class ClientEventHandlers {
 
         @SubscribeEvent
         public static void registerScreens(final RegisterMenuScreensEvent event) {
-            event.register(Registries.MENU_EXPANDED_INVENTORY.get(), ExpandedInventoryScreen::new);
+            event.register(Registries.MENU_EXPANDED_INVENTORY.get(), new MenuScreens.ScreenConstructor<ExpandedInventoryMenu, ExpandedInventoryScreen>() {
+				@Override
+				public ExpandedInventoryScreen create(ExpandedInventoryMenu menu, Inventory inventory, Component title) {
+					return new ExpandedInventoryScreen(menu, inventory.player, title);
+				}
+			});
         }
 
         @SubscribeEvent
         public static void layerRegistration(final EntityRenderersEvent.AddLayers event) {
             event.getSkins().forEach(s -> {
-                LivingEntityRenderer<Player, PlayerModel<Player>> r = event.getSkin(s);
-                r.addLayer(new BaublesRenderLayer(r));
+				var renderer = event.getSkin(s);
+				if (renderer instanceof LivingEntityRenderer ler)
+					ler.addLayer(new BaublesRenderLayer(ler));
             });
         }
     }

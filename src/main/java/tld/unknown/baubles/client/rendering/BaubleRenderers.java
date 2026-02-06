@@ -41,6 +41,6 @@ public class BaubleRenderers implements IBaubleRenderers {
 
     public void toggleRenderDebugMode() {
         renderDebugMode = !renderDebugMode;
-        Minecraft.getInstance().player.sendSystemMessage(Component.translatable("msg.baubles.debug_" + (renderDebugMode ? "on" : "off")));
+        Minecraft.getInstance().player.displayClientMessage(Component.translatable("msg.baubles.debug_" + (renderDebugMode ? "on" : "off")), true);
     }
 }

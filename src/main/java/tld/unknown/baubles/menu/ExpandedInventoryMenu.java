@@ -2,7 +2,11 @@ package tld.unknown.baubles.menu;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -12,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import tld.unknown.baubles.BaublesHolderAttachment;
@@ -21,7 +26,10 @@ import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.BaublesData;
 import tld.unknown.baubles.api.IBauble;
 
-public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> {
+import java.util.List;
+import java.util.Optional;
+
+public class ExpandedInventoryMenu extends AbstractCraftingMenu {
 
     private static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[] {
             InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS,
@@ -53,7 +61,7 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingInput, Craftin
     }
 
     private ExpandedInventoryMenu(int pContainerId, Inventory playerInventory, BaublesHolderAttachment baubles) {
-        super(Registries.MENU_EXPANDED_INVENTORY.get(), pContainerId);
+        super(Registries.MENU_EXPANDED_INVENTORY.get(), pContainerId, 2, 2);
         this.player = playerInventory.player;
         // Crafting Slots
         this.addSlot(new ResultSlot(playerInventory.player, this.craftSlots, this.resultSlots, 0, 154, 28));
@@ -88,8 +96,8 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingInput, Craftin
                 }
 
                 @Override
-                public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                    return Pair.of(InventoryMenu.BLOCK_ATLAS, TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()]);
+                public ResourceLocation getNoItemIcon() {
+                    return TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()];
                 }
             });
         }
@@ -112,8 +120,8 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingInput, Craftin
             }
 
             @Override
-            public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
+            public ResourceLocation getNoItemIcon() {
+                return InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD;
             }
         });
 
@@ -249,41 +257,70 @@ public class ExpandedInventoryMenu extends RecipeBookMenu<CraftingInput, Craftin
         return itemstack;
     }
 
-    @Override
+	@Override
+	public void slotsChanged(Container inventory) {
+		if (this.player.level() instanceof ServerLevel level) {
+			CraftingInput craftinginput = craftSlots.asCraftInput();
+			ServerPlayer serverplayer = (ServerPlayer)player;
+			ItemStack itemstack = ItemStack.EMPTY;
+			Optional<RecipeHolder<CraftingRecipe>> optional = level.getServer()
+					.getRecipeManager()
+					.getRecipeFor(RecipeType.CRAFTING, craftinginput, level, (RecipeHolder<CraftingRecipe>)null);
+			if (optional.isPresent()) {
+				RecipeHolder<CraftingRecipe> recipeholder = optional.get();
+				CraftingRecipe craftingrecipe = recipeholder.value();
+				if (resultSlots.setRecipeUsed(serverplayer, recipeholder)) {
+					ItemStack itemstack1 = craftingrecipe.assemble(craftinginput, level.registryAccess());
+					if (itemstack1.isItemEnabled(level.enabledFeatures())) {
+						itemstack = itemstack1;
+					}
+				}
+			}
+
+			resultSlots.setItem(0, itemstack);
+			setRemoteSlot(0, itemstack);
+			serverplayer.connection.send(new ClientboundContainerSetSlotPacket(this.containerId, this.incrementStateId(), 0, itemstack));
+		}
+	}
+
+	/**
+	 * Called when the container is closed.
+	 */
+	@Override
+	public void removed(Player player) {
+		super.removed(player);
+		this.resultSlots.clearContent();
+		if (!player.level().isClientSide) {
+			this.clearContainer(player, this.craftSlots);
+		}
+	}
+
+
+	@Override
     public boolean stillValid(Player pPlayer) {
         return true;
     }
 
     // Recipe Book
 
-    @Override
-    public void fillCraftSlotsStackedContents(StackedContents pItemHelper) {
-        this.craftSlots.fillStackedContents(pItemHelper);
-    }
+	@Override
+	public Slot getResultSlot() {
+		return this.slots.getFirst();
+	}
 
-    @Override
-    public void clearCraftingContent() {
-        this.resultSlots.clearContent();
-        this.craftSlots.clearContent();
-    }
 
-    @Override
-    public boolean recipeMatches(RecipeHolder recipeHolder) {
-        return recipeHolder.value().matches(this.craftSlots.asCraftInput(), this.player.level());
-    }
+	@Override
+	protected Player owner() {
+		return this.player;
+	}
 
-    @Override public int getResultSlotIndex() { return 0; }
-    @Override public int getGridWidth() { return 2; }
-    @Override public int getGridHeight() { return 2; }
-    @Override public int getSize() { return 5; }
+	@Override
+	public List<Slot> getInputGridSlots() {
+		return this.slots.subList(1, 5);
+	}
 
-    @Override
+	@Override
     public RecipeBookType getRecipeBookType() {
         return RecipeBookType.CRAFTING;
-    }
-
-    @Override
-    public boolean shouldMoveToInventory(int pSlotIndex) {
-        return pSlotIndex != this.getResultSlotIndex();
     }
 }

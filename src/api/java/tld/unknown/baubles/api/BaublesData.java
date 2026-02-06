@@ -8,7 +8,7 @@ import net.neoforged.neoforge.capabilities.ItemCapability;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * A static utility class providing all sorts of constants and values for Baubles 2
+ * A static utility class providing all sorts of constants and values for Baubles 2.
  * @author Tom Tanticle
  */
 public final class BaublesData {
@@ -23,16 +23,15 @@ public final class BaublesData {
      */
     public static final String API_VERSION = "pre_1.0";
 
-    /**
-     * {@link ResourceLocation} ids and {@link ItemCapability} definitions for Baubles 2.
-     */
-    public static final class CapabilitiesAttachments {
+	/**
+	 * {@link ResourceLocation} that identifies the {@link IBaublesHolder} attachment.
+	 */
+	public static final ResourceLocation ID_ATTACHMENT_BAUBLES = id("baubles");
 
-        public static final ResourceLocation ID_ATTACHMENT_BAUBLES = id("baubles");
-        public static final ResourceLocation ID_CAPABILITY_BAUBLE = id("bauble");
-
-        public static final ItemCapability<IBauble, Void> CAPABILITY_BAUBLE = ItemCapability.createVoid(ID_CAPABILITY_BAUBLE, IBauble.class);
-    }
+	/**
+	 * {@link ResourceLocation} that identifies the {@link ItemCapability} for items.
+	 */
+	public static final ItemCapability<IBauble, Void> CAPABILITY_BAUBLE = ItemCapability.createVoid(id("bauble"), IBauble.class);
 
     /**
      * Slot assignment {@link TagKey} definitions for Baubles 2.
@@ -58,12 +57,12 @@ public final class BaublesData {
      */
     public static final class Textures {
 
-        public static final ResourceLocation PLACEHOLDER_AMULET = id("item/slot_amulet");
-        public static final ResourceLocation PLACEHOLDER_BELT = id("item/slot_belt");
-        public static final ResourceLocation PLACEHOLDER_CHARM = id("item/slot_charm");
-        public static final ResourceLocation PLACEHOLDER_CHEST = id("item/slot_chest");
-        public static final ResourceLocation PLACEHOLDER_HEAD = id("item/slot_head");
-        public static final ResourceLocation PLACEHOLDER_RING = id("item/slot_ring");
+        public static final ResourceLocation PLACEHOLDER_AMULET = id("container/slot/amulet");
+        public static final ResourceLocation PLACEHOLDER_BELT = id("container/slot/belt");
+        public static final ResourceLocation PLACEHOLDER_CHARM = id("container/slot/charm");
+        public static final ResourceLocation PLACEHOLDER_CHEST = id("container/slot/chest");
+        public static final ResourceLocation PLACEHOLDER_HEAD = id("container/slot/head");
+        public static final ResourceLocation PLACEHOLDER_RING = id("container/slot/ring");
 
         public static final ResourceLocation UI_EXPANDED_INV = id("textures/gui/expanded_inventory.png");
         public static final ResourceLocation UI_BAUBLES_BUTTON = id("textures/gui/baubles_button.png");

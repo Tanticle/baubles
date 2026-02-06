@@ -17,9 +17,9 @@ import tld.unknown.baubles.api.BaublesAPI;
 public class BaublesExample {
 
     private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("baubles_example", "ring");
-    private static final DeferredRegister<Item> REGISTRY_ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, ID.getNamespace());
+    private static final DeferredRegister.Items REGISTRY_ITEMS = DeferredRegister.Items.createItems(ID.getNamespace());
 
-    public static final DeferredHolder<Item, TestRingItem> ITEM_RING = REGISTRY_ITEMS.register(
+    public static final DeferredHolder<Item, TestRingItem> ITEM_RING = REGISTRY_ITEMS.registerItem(
             ID.getPath(),
             TestRingItem::new);
 

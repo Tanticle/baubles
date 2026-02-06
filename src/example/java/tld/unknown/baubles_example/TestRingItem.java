@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -15,8 +16,8 @@ import tld.unknown.baubles.api.IBaubleRenderer;
 
 public class TestRingItem extends Item implements IBauble {
 
-    public TestRingItem() {
-        super(new Properties().stacksTo(1));
+    public TestRingItem(Properties properties) {
+        super(properties.stacksTo(1));
     }
 
     @Override
@@ -40,7 +41,7 @@ public class TestRingItem extends Item implements IBauble {
                 float downOffset = Helper.pixelToUnit(0.25F);
                 pose.translate(-width / 2, downOffset, -width / 2);
                 VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
-                LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -width, width, 1F, 1F, 1F, 0.5F);
+				ShapeRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -width, width, 1F, 1F, 1F, 0.5F);
             }
         }
 
@@ -53,7 +54,7 @@ public class TestRingItem extends Item implements IBauble {
                 float downOffset = Helper.pixelToUnit(0.25F);
                 pose.translate(-width / 2, downOffset, -depth / 2);
                 VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
-                LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, depth, 1F, 1F, 1F, 0.5F);
+                ShapeRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, depth, 1F, 1F, 1F, 0.5F);
             }
         }
 
@@ -77,7 +78,7 @@ public class TestRingItem extends Item implements IBauble {
             float downOffset = Helper.pixelToUnit(0.25F);
             pose.translate(-width / 2, downOffset, -depth / 2);
             VertexConsumer consumer = bufferSource.getBuffer(RenderType.debugFilledBox());
-            LevelRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, depth, 1F, 1F, 1F, 0.5F);
+			ShapeRenderer.addChainedFilledBoxVertices(pose, consumer, 0, 0, 0, width, -height, depth, 1F, 1F, 1F, 0.5F);
         }
     }
 }

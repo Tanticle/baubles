@@ -9,8 +9,6 @@ import tld.unknown.baubles.api.BaublesData;
 @Mod(BaublesData.MOD_ID)
 public class Baubles {
 
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     public Baubles(IEventBus modEventBus) {
         Registries.init(modEventBus);
     }

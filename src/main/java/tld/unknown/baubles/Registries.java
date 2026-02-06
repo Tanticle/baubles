@@ -20,7 +20,7 @@ public final class Registries {
     /* -----------------------------------------------------------------------------------------------------------*/
 
     public static final DeferredHolder<AttachmentType<?>, AttachmentType<BaublesHolderAttachment>> ATTACHMENT_BAUBLES = REGISTRY_ATTACHMENTS.register(
-            BaublesData.CapabilitiesAttachments.ID_ATTACHMENT_BAUBLES.getPath(),
+            BaublesData.ID_ATTACHMENT_BAUBLES.getPath(),
             () -> AttachmentType.serializable((holder) -> new BaublesHolderAttachment((Player)holder)).copyOnDeath().build());
 
     public static final DeferredHolder<MenuType<?>, MenuType<ExpandedInventoryMenu>> MENU_EXPANDED_INVENTORY = REGISTRY_MENU_TYPES.register(

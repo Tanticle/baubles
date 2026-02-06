@@ -1,19 +1,17 @@
 package tld.unknown.baubles.client.gui;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
-import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
+import net.minecraft.client.gui.navigation.ScreenPosition;
+import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
+import net.minecraft.client.gui.screens.inventory.EffectsInInventory;
+import net.minecraft.client.gui.screens.recipebook.CraftingRecipeBookComponent;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.entity.player.Player;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -22,70 +20,50 @@ import tld.unknown.baubles.menu.ExpandedInventoryMenu;
 
 import javax.annotation.Nullable;
 
-public class ExpandedInventoryScreen extends EffectRenderingInventoryScreen<ExpandedInventoryMenu> implements RecipeUpdateListener {
-
-    private final RecipeBookComponent recipeBookComponent = new RecipeBookComponent();
+public class ExpandedInventoryScreen extends AbstractRecipeBookScreen<ExpandedInventoryMenu> {
 
     private float xMouse, yMouse;
-    private boolean widthTooNarrow, buttonClicked;
+    private boolean buttonClicked;
 
-    public ExpandedInventoryScreen(ExpandedInventoryMenu inv, Inventory playerInv, Component name) {
-        super(inv, playerInv, name);
+	private final EffectsInInventory effects;
+
+    public ExpandedInventoryScreen(ExpandedInventoryMenu inv, Player p, Component name) {
+        super(inv, new CraftingRecipeBookComponent(p.inventoryMenu), p.getInventory(), name);
         this.titleLabelX = 115;
         this.titleLabelY = 8;
+		this.effects = new EffectsInInventory(this);
     }
 
-    @Override
-    public void containerTick() {
-        this.recipeBookComponent.tick();
-    }
+	@Override
+	protected ScreenPosition getRecipeBookButtonPosition() {
+		return new ScreenPosition(this.leftPos + 124, this.height / 2 - 22);
+	}
 
-    @Override
-    protected void init() {
-        super.init();
-        this.widthTooNarrow = this.width < 379;
-        this.recipeBookComponent.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.menu);
-        this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth);
-        this.addRenderableWidget(
-                new ImageButton(this.leftPos + 124, this.height / 2 - 22, 20, 18, RecipeBookComponent.RECIPE_BUTTON_SPRITES, p_313434_ -> {
-                    this.recipeBookComponent.toggleVisibility();
-                    this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth);
-                    p_313434_.setPosition(this.leftPos + 124, this.height / 2 - 22);
-                    this.buttonClicked = true;
-                })
-        );
-        this.addWidget(this.recipeBookComponent);
-        this.setInitialFocus(this.recipeBookComponent);
-    }
+	@Override
+	protected void onRecipeBookButtonClick() {
+		this.buttonClicked = true;
+	}
 
-    @Override
+
+	@Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
         pGuiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
     }
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        if (this.recipeBookComponent.isVisible() && this.widthTooNarrow) {
-            this.renderBackground(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        } else {
-            super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-            this.recipeBookComponent.renderGhostRecipe(pGuiGraphics, this.leftPos, this.topPos, false, pPartialTick);
-        }
-
-        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
-        this.recipeBookComponent.renderTooltip(pGuiGraphics, this.leftPos, this.topPos, pMouseX, pMouseY);
+		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+		this.effects.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.xMouse = (float)pMouseX;
         this.yMouse = (float)pMouseY;
     }
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        int i = this.leftPos;
-        int j = this.topPos;
-        pGuiGraphics.blit(BaublesData.Textures.UI_EXPANDED_INV, i, j, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
-        renderEntityInInventoryFollowsMouse(pGuiGraphics, i + 26, j + 8, i + 75, j + 78, 30, 0.0625F, this.xMouse, this.yMouse, this.minecraft.player);
+        int x = this.leftPos;
+        int y = this.topPos;
+        pGuiGraphics.blit(RenderType::guiTextured, BaublesData.Textures.UI_EXPANDED_INV, x, y, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+        renderEntityInInventoryFollowsMouse(pGuiGraphics, x + 26, y + 8, x + 75, y + 78, 30, 0.0625F, this.xMouse, this.yMouse, this.minecraft.player);
     }
 
     public static void renderEntityInInventoryFollowsMouse(
@@ -171,26 +149,11 @@ public class ExpandedInventoryScreen extends EffectRenderingInventoryScreen<Expa
         }
 
         entityrenderdispatcher.setRenderShadow(false);
-        RenderSystem.runAsFancy(() -> entityrenderdispatcher.render(pEntity, 0.0, 0.0, 0.0, 0.0F, 1.0F, pGuiGraphics.pose(), pGuiGraphics.bufferSource(), 15728880));
+        pGuiGraphics.drawSpecial(source -> entityrenderdispatcher.render(pEntity, 0.0, 0.0, 0.0, 1.0F, pGuiGraphics.pose(), source, 15728880));
         pGuiGraphics.flush();
         entityrenderdispatcher.setRenderShadow(true);
         pGuiGraphics.pose().popPose();
         Lighting.setupFor3DItems();
-    }
-
-    @Override
-    protected boolean isHovering(int pX, int pY, int pWidth, int pHeight, double pMouseX, double p_98863_) {
-        return (!this.widthTooNarrow || !this.recipeBookComponent.isVisible()) && super.isHovering(pX, pY, pWidth, pHeight, pMouseX, p_98863_);
-    }
-
-    @Override
-    public boolean mouseClicked(double pMouseX, double p_98842_, int pMouseY) {
-        if (this.recipeBookComponent.mouseClicked(pMouseX, p_98842_, pMouseY)) {
-            this.setFocused(this.recipeBookComponent);
-            return true;
-        } else {
-            return this.widthTooNarrow && this.recipeBookComponent.isVisible() ? false : super.mouseClicked(pMouseX, p_98842_, pMouseY);
-        }
     }
 
     @Override
@@ -201,30 +164,5 @@ public class ExpandedInventoryScreen extends EffectRenderingInventoryScreen<Expa
         } else {
             return super.mouseReleased(pMouseX, p_98894_, pMouseY);
         }
-    }
-
-    @Override
-    protected boolean hasClickedOutside(double pMouseX, double p_98846_, int pMouseY, int p_98848_, int pGuiLeft) {
-        boolean flag = pMouseX < (double)pMouseY
-                || p_98846_ < (double)p_98848_
-                || pMouseX >= (double)(pMouseY + this.imageWidth)
-                || p_98846_ >= (double)(p_98848_ + this.imageHeight);
-        return this.recipeBookComponent.hasClickedOutside(pMouseX, p_98846_, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, pGuiLeft) && flag;
-    }
-
-    @Override
-    protected void slotClicked(Slot pSlot, int pSlotId, int pMouseButton, ClickType pType) {
-        super.slotClicked(pSlot, pSlotId, pMouseButton, pType);
-        this.recipeBookComponent.slotClicked(pSlot);
-    }
-
-    @Override
-    public void recipesUpdated() {
-        this.recipeBookComponent.recipesUpdated();
-    }
-
-    @Override
-    public RecipeBookComponent getRecipeBookComponent() {
-        return this.recipeBookComponent;
     }
 }

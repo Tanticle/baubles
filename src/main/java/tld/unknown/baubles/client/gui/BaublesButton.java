@@ -6,6 +6,7 @@ import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import tld.unknown.baubles.api.BaublesData;
 import tld.unknown.baubles.networking.ServerboundOpenBaublesInvPacket;
@@ -39,10 +40,10 @@ public class BaublesButton extends AbstractButton {
             pGuiGraphics.pose().pushPose();
             pGuiGraphics.pose().translate(0, 0, 200);
             if (isHovered()) {
-                pGuiGraphics.blit(BaublesData.Textures.UI_BAUBLES_BUTTON, getX(), getY(), 10, 0, 10, 10, 20, 10);
+                pGuiGraphics.blit(RenderType::guiTextured, BaublesData.Textures.UI_BAUBLES_BUTTON, getX(), getY(), 10, 0, 10, 10, 20, 10);
                 pGuiGraphics.drawCenteredString(Minecraft.getInstance().font, getMessage(), getX() + 5, getY() + getHeight(), 0xFFFFFF);
             } else {
-                pGuiGraphics.blit(BaublesData.Textures.UI_BAUBLES_BUTTON, getX(), getY(), 0, 0, 10, 10, 20, 10);
+                pGuiGraphics.blit(RenderType::guiTextured, BaublesData.Textures.UI_BAUBLES_BUTTON, getX(), getY(), 0, 0, 10, 10, 20, 10);
             }
             pGuiGraphics.pose().popPose();
         }

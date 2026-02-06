@@ -1,12 +1,14 @@
 package tld.unknown.baubles.client.rendering;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.HumanoidArm;
@@ -19,57 +21,60 @@ import tld.unknown.baubles.api.BaublesAPI;
 import tld.unknown.baubles.api.IBaubleRenderer;
 import tld.unknown.baubles.client.BaublesClient;
 
-public class BaublesRenderLayer extends RenderLayer<Player, PlayerModel<Player>> {
+public class BaublesRenderLayer extends RenderLayer<PlayerRenderState, PlayerModel> {
 
     private static final float BODY_OFFSET = 0.75F;
 
-    public BaublesRenderLayer(RenderLayerParent<Player, PlayerModel<Player>> pRenderer) {
+    public BaublesRenderLayer(RenderLayerParent<PlayerRenderState, PlayerModel> pRenderer) {
         super(pRenderer);
     }
 
-    @Override
-    public void render(PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, Player pLivingEntity, float pLimbSwing, float pLimbSwingAmount, float pPartialTick, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-        if(pLivingEntity.isInvisible() || pLivingEntity.hasEffect(MobEffects.INVISIBILITY))
-            return;
+	@Override
+	public void render(PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, PlayerRenderState renderState, float yRot, float xRot) {
+		if(renderState.isInvisible || renderState.isInvisibleToPlayer)
+			return;
 
-        ItemStack[] holder = pLivingEntity.getData(Registries.ATTACHMENT_BAUBLES).getAllSlots();
-        for (int i = 0; i < holder.length; i++) {
-            ItemStack item = holder[i];
-            if(item == ItemStack.EMPTY || !BaublesAPI.isBaubleItem(item))
-                continue;
-            IBaubleRenderer renderer = BaublesClient.RENDERERS.getRenderer(item);
-            if(renderer == null)
-                continue;
+		Player player = Minecraft.getInstance().player;
+		float pPartialTick = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
 
-            BaubleType slot = BaubleType.bySlotId(i);
+		ItemStack[] holder = player.getData(Registries.ATTACHMENT_BAUBLES).getAllSlots();
+		for (int i = 0; i < holder.length; i++) {
+			ItemStack item = holder[i];
+			if(item == ItemStack.EMPTY || !BaublesAPI.isBaubleItem(item))
+				continue;
+			IBaubleRenderer renderer = BaublesClient.RENDERERS.getRenderer(item);
+			if(renderer == null)
+				continue;
 
-            // Head
-            pPoseStack.pushPose();
-            ModelPart head = getParentModel().head;
-            translateAndRotate(pPoseStack, head);
-            if(isDebugRendering())
-                IBaubleRenderer.Helper.renderPoseOriginMarker(pBuffer, pPoseStack, 1F, 0F, 0F, 0.5F);
-            renderer.renderHead(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, item, slot);
-            pPoseStack.popPose();
-            // Body
-            pPoseStack.pushPose();
-            ModelPart body = getParentModel().body;
-            translateAndRotate(pPoseStack, body);
-            pPoseStack.translate(0, BODY_OFFSET, 0);
-            if(isDebugRendering())
-                IBaubleRenderer.Helper.renderPoseOriginMarker(pBuffer, pPoseStack, 1F, 0F, 0F, 0.5F);
-            renderer.renderBody(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, item, slot);
-            pPoseStack.popPose();
+			BaubleType slot = BaubleType.bySlotId(i);
 
-            // Arms
-            dispatchArm(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, HumanoidArm.LEFT, renderer, item, slot);
-            dispatchArm(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, HumanoidArm.RIGHT, renderer, item, slot);
+			// Head
+			poseStack.pushPose();
+			ModelPart head = getParentModel().head;
+			translateAndRotate(poseStack, head);
+			if(isDebugRendering())
+				IBaubleRenderer.Helper.renderPoseOriginMarker(bufferSource, poseStack, 1F, 0F, 0F, 0.5F);
+			renderer.renderHead(poseStack, bufferSource, packedLight, pPartialTick, player, item, slot);
+			poseStack.popPose();
+			// Body
+			poseStack.pushPose();
+			ModelPart body = getParentModel().body;
+			translateAndRotate(poseStack, body);
+			poseStack.translate(0, BODY_OFFSET, 0);
+			if(isDebugRendering())
+				IBaubleRenderer.Helper.renderPoseOriginMarker(bufferSource, poseStack, 1F, 0F, 0F, 0.5F);
+			renderer.renderBody(poseStack, bufferSource, packedLight, pPartialTick, player, item, slot);
+			poseStack.popPose();
 
-            // Legs
-            dispatchLeg(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, IBaubleRenderer.HumanoidLeg.LEFT, renderer, item, slot);
-            dispatchLeg(pPoseStack, pBuffer, pPackedLight, pPartialTick, pLivingEntity, IBaubleRenderer.HumanoidLeg.RIGHT, renderer, item, slot);
-        }
-    }
+			// Arms
+			dispatchArm(poseStack, bufferSource, packedLight, pPartialTick, player, HumanoidArm.LEFT, renderer, item, slot);
+			dispatchArm(poseStack, bufferSource, packedLight, pPartialTick, player, HumanoidArm.RIGHT, renderer, item, slot);
+
+			// Legs
+			dispatchLeg(poseStack, bufferSource, packedLight, pPartialTick, player, IBaubleRenderer.HumanoidLeg.LEFT, renderer, item, slot);
+			dispatchLeg(poseStack, bufferSource, packedLight, pPartialTick, player, IBaubleRenderer.HumanoidLeg.RIGHT, renderer, item, slot);
+		}
+	}
 
     private static final float ARM_Y_OFFSET = IBaubleRenderer.Helper.pixelToUnit(10);
     private static final float THIN_ARM_X_OFFSET = IBaubleRenderer.Helper.pixelToUnit(0.5F);

@@ -30,7 +30,7 @@ public final class BaublesAPI {
      * @return The {@link IBauble} implementation, or null when none is present.
      */
     public static @Nullable IBauble getBaubleImplementation(@NotNull ItemStack stack) {
-        return stack.getItem() instanceof IBauble b ? b : stack.getCapability(BaublesData.CapabilitiesAttachments.CAPABILITY_BAUBLE);
+        return stack.getItem() instanceof IBauble b ? b : stack.getCapability(BaublesData.CAPABILITY_BAUBLE);
     }
 
     /**

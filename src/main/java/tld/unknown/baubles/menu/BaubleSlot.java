@@ -68,9 +68,8 @@ public class BaubleSlot extends SlotItemHandler {
             implNew.onEquipped(type, currentStack, p);
     }
 
-    @Nullable
-    @Override
-    public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
-        return Pair.of(InventoryMenu.BLOCK_ATLAS, type.getPlaceholderTexture());
-    }
+	@Override
+	public @Nullable ResourceLocation getNoItemIcon() {
+		return type.getPlaceholderTexture();
+	}
 }

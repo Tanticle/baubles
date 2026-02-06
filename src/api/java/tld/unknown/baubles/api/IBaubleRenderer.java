@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -136,7 +137,7 @@ public interface IBaubleRenderer {
             pose.pushPose();
             pose.translate(-step / 2, step / 2, -step / 2);
             VertexConsumer consumer = source.getBuffer(RenderType.debugFilledBox());
-            LevelRenderer.addChainedFilledBoxVertices(pose, consumer, step, -step, step, 0, 0, 0, red, green, blue, alpha);
+			ShapeRenderer.addChainedFilledBoxVertices(pose, consumer, step, -step, step, 0, 0, 0, red, green, blue, alpha);
             pose.popPose();
         }
     }
