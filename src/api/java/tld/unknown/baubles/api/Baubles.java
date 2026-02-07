@@ -37,6 +37,11 @@ public final class Baubles {
     public static final String API_VERSION = "pre_1.0";
 
 	/**
+	 * {@link ResourceLocation} that identifies the {@link IBaublesHolder} attachment.
+	 */
+	public static final ResourceLocation ID_ATTACHMENT_BAUBLES = id("baubles");
+
+	/**
 	 * {@link ResourceLocation} that identifies the {@link ItemCapability} for items.
 	 */
 	public static final ItemCapability<IBauble, Void> CAPABILITY_BAUBLE = ItemCapability.createVoid(id("bauble"), IBauble.class);
