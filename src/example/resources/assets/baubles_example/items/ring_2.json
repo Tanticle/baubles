@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "baubles_example:item/ring_iron"
+    "model": "baubles_example:item/ring_gold"
   }
 }

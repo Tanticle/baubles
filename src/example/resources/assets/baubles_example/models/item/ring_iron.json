@@ -1,7 +1,7 @@
 {
     "parent": "builtin/generated",
     "textures": {
-        "layer0": "baubles_example:item/ring"
+        "layer0": "baubles_example:item/ring_iron"
     },
     "display": {
         "thirdperson": {

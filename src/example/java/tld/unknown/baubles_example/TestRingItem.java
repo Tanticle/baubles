@@ -47,7 +47,7 @@ public class TestRingItem extends Item implements IBauble {
 
         @Override
         public void renderBody(PoseStack pose, MultiBufferSource bufferSource, int packetLight, float deltaTick, Player p, ItemStack stack, BaubleType slot) {
-            if (slot == BaubleType.BODY) {
+            if (slot == BaubleType.AMULET || slot == BaubleType.BODY) {
                 float width = Helper.pixelToUnit(8.5F);
                 float depth = Helper.pixelToUnit(4.5F);
                 float height = Helper.pixelToUnit(12.5F);
