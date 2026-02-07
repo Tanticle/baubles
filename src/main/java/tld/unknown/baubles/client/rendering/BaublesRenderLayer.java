@@ -113,6 +113,6 @@ public class BaublesRenderLayer extends RenderLayer<PlayerRenderState, PlayerMod
     }
 
     private boolean isDebugRendering() {
-        return ((BaubleRenderers)Baubles.API.getRenderers()).renderDebugMode;
+        return BaublesClient.RENDERERS.renderDebugMode;
     }
 }

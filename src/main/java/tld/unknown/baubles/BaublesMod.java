@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
@@ -82,7 +83,13 @@ public class BaublesMod implements IBaublesAPI {
 		return set;
 	}
 
-	public IBaubleRenderers getRenderers() {
-		return BaublesClient.RENDERERS;
+	@Override
+	public void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer) {
+		BaublesClient.RENDERERS.registerRenderer(key, renderer, false);
+	}
+
+	@Override
+	public void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer, boolean replace) {
+		BaublesClient.RENDERERS.registerRenderer(key, renderer, replace);
 	}
 }

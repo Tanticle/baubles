@@ -12,7 +12,7 @@ import tld.unknown.baubles.api.IBaubleRenderers;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BaubleRenderers implements IBaubleRenderers {
+public class BaubleRenderers  {
 
     private final Map<ResourceLocation, IBaubleRenderer> renderers = new HashMap<>();
 
@@ -23,13 +23,7 @@ public class BaubleRenderers implements IBaubleRenderers {
         return renderers.get(loc);
     }
 
-    @Override
-    public void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer) {
-        registerRenderer(key, renderer, false);
-    }
-
-    @Override
-    public void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer, boolean replace) {
+    public void registerRenderer(ResourceLocation key, IBaubleRenderer renderer, boolean replace) {
         if(!replace)
             renderers.putIfAbsent(key, renderer);
         else

@@ -65,7 +65,7 @@ public final class ClientEventHandlers {
                 Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket(0, 0));
             }
             if(BaublesClient.KEY_DEBUG.consumeClick()) {
-                ((BaubleRenderers)Baubles.API.getRenderers()).toggleRenderDebugMode();
+                BaublesClient.RENDERERS.toggleRenderDebugMode();
             }
         }
 

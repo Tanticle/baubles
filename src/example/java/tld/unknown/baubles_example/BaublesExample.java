@@ -40,8 +40,8 @@ public class BaublesExample {
 
         @SubscribeEvent
         public static void onClientInit(final FMLClientSetupEvent event) {
-			Baubles.API.getRenderers().registerRenderer(ID, new TestRingItem.TestRenderer());
-			Baubles.API.getRenderers().registerRenderer(ID_2, new TestRingItem.TestRenderer());
+			Baubles.API.registerRenderer(ID, new TestRingItem.TestRenderer());
+			Baubles.API.registerRenderer(ID_2, new TestRingItem.TestRenderer());
         }
     }
 }
