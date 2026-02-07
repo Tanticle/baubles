@@ -41,7 +41,7 @@ public class BaublesHolderAttachment extends ItemStackHandler implements IBauble
     @Override
     protected void onContentsChanged(int slot) {
         if(!player.level().isClientSide()) {
-            ((ServerPlayer)player).connection.send(new ClientboundSyncDataPacket(player.getData(Registries.ATTACHMENT_BAUBLES).stacks));
+            ((ServerPlayer)player).connection.send(new ClientboundSyncDataPacket(player.getData(BaublesMod.ATTACHMENT_BAUBLES).stacks));
         }
     }
 

@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public interface IBaublesHolder {
 
     /**
-     * The max size of the baubles inventory.
+     * The maximum size of the baubles inventory.
      */
     int INVENTORY_SIZE = 7;
 

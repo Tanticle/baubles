@@ -5,7 +5,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import tld.unknown.baubles.BaublesHolderAttachment;
-import tld.unknown.baubles.Registries;
+import tld.unknown.baubles.BaublesMod;
+import tld.unknown.baubles.api.Baubles;
 import tld.unknown.baubles.menu.ExpandedInventoryMenu;
 
 public final class NetworkHandler {
@@ -14,7 +15,7 @@ public final class NetworkHandler {
         ctx.enqueueWork(() -> {
             BaublesHolderAttachment cap = new BaublesHolderAttachment(ctx.player());
             cap.updateSlots(packet.data());
-            ctx.player().setData(Registries.ATTACHMENT_BAUBLES, cap);
+            ctx.player().setData(BaublesMod.ATTACHMENT_BAUBLES, cap);
         });
     }
 

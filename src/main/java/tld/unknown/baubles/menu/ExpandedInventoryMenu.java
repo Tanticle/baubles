@@ -1,6 +1,5 @@
 package tld.unknown.baubles.menu;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +9,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -20,10 +18,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import tld.unknown.baubles.BaublesHolderAttachment;
-import tld.unknown.baubles.Registries;
+import tld.unknown.baubles.BaublesMod;
 import tld.unknown.baubles.api.BaubleType;
-import tld.unknown.baubles.api.BaublesAPI;
-import tld.unknown.baubles.api.BaublesData;
+import tld.unknown.baubles.api.Baubles;
 import tld.unknown.baubles.api.IBauble;
 
 import java.util.List;
@@ -52,16 +49,16 @@ public class ExpandedInventoryMenu extends AbstractCraftingMenu {
 
     // Client Constructor
     public ExpandedInventoryMenu(int pConainterId, Inventory playerInventory) {
-        this(pConainterId, playerInventory, Minecraft.getInstance().player.getData(Registries.ATTACHMENT_BAUBLES));
+        this(pConainterId, playerInventory, Minecraft.getInstance().player.getData(BaublesMod.ATTACHMENT_BAUBLES));
     }
 
     // Server Constructor
     public ExpandedInventoryMenu(int pContainerId, Player p) {
-        this(pContainerId, p.getInventory(), p.getData(Registries.ATTACHMENT_BAUBLES));
+        this(pContainerId, p.getInventory(), p.getData(BaublesMod.ATTACHMENT_BAUBLES));
     }
 
     private ExpandedInventoryMenu(int pContainerId, Inventory playerInventory, BaublesHolderAttachment baubles) {
-        super(Registries.MENU_EXPANDED_INVENTORY.get(), pContainerId, 2, 2);
+        super(BaublesMod.MENU_EXPANDED_INVENTORY.get(), pContainerId, 2, 2);
         this.player = playerInventory.player;
         // Crafting Slots
         this.addSlot(new ResultSlot(playerInventory.player, this.craftSlots, this.resultSlots, 0, 154, 28));
@@ -172,8 +169,8 @@ public class ExpandedInventoryMenu extends AbstractCraftingMenu {
             itemstack = itemstack1.copy();
             EquipmentSlot equipmentslot = pPlayer.getEquipmentSlotForItem(itemstack);
             if(!(slot instanceof BaubleSlot)) {
-                if(BaublesAPI.isBaubleItem(itemstack1)) {
-                    if(itemstack1.is(BaublesData.Tags.ITEM_TRINKET)) {
+                if(Baubles.API.isBaubleItem(itemstack1)) {
+                    if(itemstack1.is(Baubles.Tags.ITEM_TRINKET)) {
                         for(int i = 0; i < BaublesHolderAttachment.INVENTORY_SIZE; i++) {
                             int slotId = baublesInvIdStart + i;
                             if(!baubleMoveStack(itemstack, slotId)) {
@@ -183,7 +180,7 @@ public class ExpandedInventoryMenu extends AbstractCraftingMenu {
                             }
                         }
                     } else {
-                        for(BaubleType type : BaublesAPI.getBaubleTypes(itemstack1)) {
+                        for(BaubleType type : Baubles.API.getBaubleTypes(itemstack1)) {
                             int slotId = baublesInvIdStart + type.ordinal();
                             if(!baubleMoveStack(itemstack, slotId)) {
                                 slot.set(ItemStack.EMPTY);
@@ -194,8 +191,8 @@ public class ExpandedInventoryMenu extends AbstractCraftingMenu {
                     }
                     itemstack1 = itemstack.copy();
                 }
-            } else if(BaublesAPI.hasBaubleImplementation(itemstack1)) {
-                IBauble impl = BaublesAPI.getBaubleImplementation(itemstack1);
+            } else if(Baubles.API.hasBaubleImplementation(itemstack1)) {
+                IBauble impl = Baubles.API.getBaubleImplementation(itemstack1);
                 BaubleType type = BaubleType.bySlotId(pIndex - baublesInvIdStart);
                 if (impl.canUnequip(type, itemstack1, player) && this.moveItemStackTo(itemstack1, 9, 45, false)) {
                     impl.onUnequipped(type, itemstack1, player);

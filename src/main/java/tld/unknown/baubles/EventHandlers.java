@@ -19,32 +19,32 @@ import java.util.Arrays;
 
 public final class EventHandlers {
 
-    @EventBusSubscriber(modid = BaublesData.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = Baubles.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
     public static final class ModBusSubscriber {
 
         @SubscribeEvent
         public static void registerPackets(final RegisterPayloadHandlersEvent event) {
-            final PayloadRegistrar registrar = event.registrar(BaublesData.MOD_ID);
-            registrar.versioned(BaublesData.API_VERSION);
+            final PayloadRegistrar registrar = event.registrar(Baubles.MOD_ID);
+            registrar.versioned(Baubles.API_VERSION);
             registrar.playToClient(ClientboundSyncDataPacket.TYPE, ClientboundSyncDataPacket.STREAM_CODEC, NetworkHandler::clientHandleDataSync);
             registrar.playToServer(ServerboundOpenBaublesInvPacket.TYPE, ServerboundOpenBaublesInvPacket.STREAM_CODEC, NetworkHandler::serverHandleOpenInv);
         }
 
         @SubscribeEvent
         public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-            event.registerEntity(Capabilities.ItemHandler.ENTITY, EntityType.PLAYER, (player, ctx) -> player.getData(Registries.ATTACHMENT_BAUBLES));
+            event.registerEntity(Capabilities.ItemHandler.ENTITY, EntityType.PLAYER, (player, ctx) -> player.getData(BaublesMod.ATTACHMENT_BAUBLES));
         }
     }
 
-    @EventBusSubscriber(modid = BaublesData.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+    @EventBusSubscriber(modid = Baubles.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
     public static final class ForgeBusSubscriber {
 
         @SubscribeEvent
         public static void playerTick(final PlayerTickEvent.Post event) {
-            IBaublesHolder baubles = event.getEntity().getData(Registries.ATTACHMENT_BAUBLES);
+            IBaublesHolder baubles = event.getEntity().getData(BaublesMod.ATTACHMENT_BAUBLES);
             for (int i = 0; i < IBaublesHolder.INVENTORY_SIZE; i++) {
                 ItemStack slot = baubles.getAllSlots()[i];
-                IBauble impl = BaublesAPI.getBaubleImplementation(slot);
+                IBauble impl = Baubles.API.getBaubleImplementation(slot);
                 if(slot != ItemStack.EMPTY && impl != null) {
                     impl.onWornTick(BaubleType.bySlotId(i), slot, event.getEntity());
                 }
@@ -54,7 +54,7 @@ public final class EventHandlers {
         @SubscribeEvent
         public static void datapackSync(final OnDatapackSyncEvent event) {
             event.getRelevantPlayers().forEach(player -> {
-                BaublesHolderAttachment holder = player.getData(Registries.ATTACHMENT_BAUBLES);
+                BaublesHolderAttachment holder = player.getData(BaublesMod.ATTACHMENT_BAUBLES);
                 for (BaubleType value : BaubleType.values()) {
                     ItemStack itemCopy = holder.getBaubleInSlot(value).copy();
                     if(!value.isItemValid(itemCopy)) {

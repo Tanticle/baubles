@@ -1,15 +1,17 @@
 package tld.unknown.baubles.api;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.checkerframework.checker.index.qual.NonNegative;
-import org.checkerframework.checker.index.qual.Positive;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 /**
  * An enum representing the 7 slots present in Baubles 2.
@@ -17,14 +19,17 @@ import org.jetbrains.annotations.Nullable;
  */
 public enum BaubleType {
 
-    AMULET(BaublesData.Tags.ITEM_AMULET, BaublesData.Textures.PLACEHOLDER_AMULET, Component.translatable("name.baubles.amulet")),
-    RING_RIGHT(BaublesData.Tags.ITEM_RING, BaublesData.Textures.PLACEHOLDER_RING, Component.translatable("name.baubles.ring")),
-    RING_LEFT(BaublesData.Tags.ITEM_RING, BaublesData.Textures.PLACEHOLDER_RING, Component.translatable("name.baubles.ring")),
-    BELT(BaublesData.Tags.ITEM_BELT, BaublesData.Textures.PLACEHOLDER_BELT, Component.translatable("name.baubles.belt")),
-    HEAD(BaublesData.Tags.ITEM_HEAD, BaublesData.Textures.PLACEHOLDER_HEAD, Component.translatable("name.baubles.head")),
-    BODY(BaublesData.Tags.ITEM_BODY, BaublesData.Textures.PLACEHOLDER_CHEST, Component.translatable("name.baubles.body")),
-    CHARM(BaublesData.Tags.ITEM_CHARM, BaublesData.Textures.PLACEHOLDER_CHARM, Component.translatable("name.baubles.charm"));
+    AMULET(Baubles.Tags.ITEM_AMULET, Baubles.Textures.PLACEHOLDER_AMULET, Component.translatable("name.baubles.amulet")),
+    RING_RIGHT(Baubles.Tags.ITEM_RING, Baubles.Textures.PLACEHOLDER_RING, Component.translatable("name.baubles.ring")),
+    RING_LEFT(Baubles.Tags.ITEM_RING, Baubles.Textures.PLACEHOLDER_RING, Component.translatable("name.baubles.ring")),
+    BELT(Baubles.Tags.ITEM_BELT, Baubles.Textures.PLACEHOLDER_BELT, Component.translatable("name.baubles.belt")),
+    HEAD(Baubles.Tags.ITEM_HEAD, Baubles.Textures.PLACEHOLDER_HEAD, Component.translatable("name.baubles.head")),
+    BODY(Baubles.Tags.ITEM_BODY, Baubles.Textures.PLACEHOLDER_CHEST, Component.translatable("name.baubles.body")),
+    CHARM(Baubles.Tags.ITEM_CHARM, Baubles.Textures.PLACEHOLDER_CHARM, Component.translatable("name.baubles.charm"));
 
+	/**
+	 * Translatable {@link Component} slot prefix for tooltips.
+	 */
     public static final Component NAME_PREFIX = Component.translatable("name.baubles.bauble").withStyle(ChatFormatting.GOLD).append(" - ");
 
     private final TagKey<Item> slotTag;
@@ -38,15 +43,13 @@ public enum BaubleType {
     }
 
     /**
-     * Whether the given {@link ItemStack} has any {@link TagKey} assignments that marks it as a bauble slot compatible item.
+     * Whether the given {@link ItemStack} has any {@link TagKey} assignments or {@link DataComponentType} that mark it as a bauble slot compatible item.
      * @param stack The {@link ItemStack} to check.
-     * @return Whether the given {@link ItemStack} has any valid {@link TagKey} assignments.
+     * @return Whether the given {@link ItemStack} has any valid {@link TagKey} assignments or {@link DataComponentType}.
      */
-    public static boolean hasBaubleTags(@NotNull ItemStack stack) {
-        if(stack.is(BaublesData.Tags.ITEM_TRINKET))
-            return true;
+    public static boolean hasBaubleData(@NotNull ItemStack stack) {
         for (BaubleType type : BaubleType.values())
-            if(stack.is(type.slotTag))
+            if(type.isItemValid(stack))
                 return true;
         return false;
     }
@@ -78,7 +81,9 @@ public enum BaubleType {
      * @return Whether the given {@link ItemStack} is valid.
      */
     public boolean isItemValid(@NotNull ItemStack stack) {
-        return stack == ItemStack.EMPTY || (BaublesAPI.isBaubleItem(stack) && (stack.is(this.slotTag) || stack.is(BaublesData.Tags.ITEM_TRINKET)));
+		if(stack.is(Baubles.Tags.ITEM_TRINKET) || stack == ItemStack.EMPTY)
+			return true;
+		return stack.is(this.slotTag) || stack.getOrDefault(Baubles.COMPONENT_BAUBLE, List.of()).contains(this);
     }
 
     /**

@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import tld.unknown.baubles.api.BaublesData;
+import tld.unknown.baubles.api.Baubles;
 import tld.unknown.baubles.menu.ExpandedInventoryMenu;
 
 import javax.annotation.Nullable;
@@ -62,7 +62,7 @@ public class ExpandedInventoryScreen extends AbstractRecipeBookScreen<ExpandedIn
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         int x = this.leftPos;
         int y = this.topPos;
-        pGuiGraphics.blit(RenderType::guiTextured, BaublesData.Textures.UI_EXPANDED_INV, x, y, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
+        pGuiGraphics.blit(RenderType::guiTextured, Baubles.Textures.UI_EXPANDED_INV, x, y, 0, 0, this.imageWidth, this.imageHeight, this.imageWidth, this.imageHeight);
         renderEntityInInventoryFollowsMouse(pGuiGraphics, x + 26, y + 8, x + 75, y + 78, 30, 0.0625F, this.xMouse, this.yMouse, this.minecraft.player);
     }
 

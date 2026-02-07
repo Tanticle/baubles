@@ -10,14 +10,13 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.client.resources.PlayerSkin;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Quaternionf;
-import tld.unknown.baubles.Registries;
+import tld.unknown.baubles.BaublesMod;
 import tld.unknown.baubles.api.BaubleType;
-import tld.unknown.baubles.api.BaublesAPI;
+import tld.unknown.baubles.api.Baubles;
 import tld.unknown.baubles.api.IBaubleRenderer;
 import tld.unknown.baubles.client.BaublesClient;
 
@@ -37,10 +36,10 @@ public class BaublesRenderLayer extends RenderLayer<PlayerRenderState, PlayerMod
 		Player player = Minecraft.getInstance().player;
 		float pPartialTick = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaTicks();
 
-		ItemStack[] holder = player.getData(Registries.ATTACHMENT_BAUBLES).getAllSlots();
+		ItemStack[] holder = player.getData(BaublesMod.ATTACHMENT_BAUBLES).getAllSlots();
 		for (int i = 0; i < holder.length; i++) {
 			ItemStack item = holder[i];
-			if(item == ItemStack.EMPTY || !BaublesAPI.isBaubleItem(item))
+			if(item == ItemStack.EMPTY || !Baubles.API.isBaubleItem(item))
 				continue;
 			IBaubleRenderer renderer = BaublesClient.RENDERERS.getRenderer(item);
 			if(renderer == null)
@@ -114,6 +113,6 @@ public class BaublesRenderLayer extends RenderLayer<PlayerRenderState, PlayerMod
     }
 
     private boolean isDebugRendering() {
-        return ((BaubleRenderers)BaublesAPI.getRenderers()).renderDebugMode;
+        return ((BaubleRenderers)Baubles.API.getRenderers()).renderDebugMode;
     }
 }

@@ -9,17 +9,14 @@ import org.jetbrains.annotations.NotNull;
 import tld.unknown.baubles.api.IBaubleRenderer;
 import tld.unknown.baubles.api.IBaubleRenderers;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class BaubleRenderers implements IBaubleRenderers {
 
-    private final Map<ResourceLocation, IBaubleRenderer> renderers;
+    private final Map<ResourceLocation, IBaubleRenderer> renderers = new HashMap<>();
 
     public boolean renderDebugMode = false;
-
-    public BaubleRenderers(Map<ResourceLocation, IBaubleRenderer> renderers) {
-        this.renderers = renderers;
-    }
 
     public IBaubleRenderer getRenderer(ItemStack stack) {
         ResourceLocation loc = BuiltInRegistries.ITEM.getKey(stack.getItem());

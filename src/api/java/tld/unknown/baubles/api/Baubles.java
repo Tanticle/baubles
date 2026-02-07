@@ -1,17 +1,30 @@
 package tld.unknown.baubles.api;
 
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ItemCapability;
 import org.jetbrains.annotations.ApiStatus;
+
+import java.util.List;
 
 /**
  * A static utility class providing all sorts of constants and values for Baubles 2.
  * @author Tom Tanticle
  */
-public final class BaublesData {
+public final class Baubles {
+
+	/**
+	 * The main {@link IBaublesAPI} instance.
+	 */
+	public static IBaublesAPI API;
 
     /**
      * The mod id for Baubles 2.
@@ -24,14 +37,17 @@ public final class BaublesData {
     public static final String API_VERSION = "pre_1.0";
 
 	/**
-	 * {@link ResourceLocation} that identifies the {@link IBaublesHolder} attachment.
-	 */
-	public static final ResourceLocation ID_ATTACHMENT_BAUBLES = id("baubles");
-
-	/**
 	 * {@link ResourceLocation} that identifies the {@link ItemCapability} for items.
 	 */
 	public static final ItemCapability<IBauble, Void> CAPABILITY_BAUBLE = ItemCapability.createVoid(id("bauble"), IBauble.class);
+
+	/**
+	 * {@link DataComponentType} used to create an {@link ItemStack} equipable in the given {@link BaubleType}.
+	 */
+	public static final DataComponentType<List<BaubleType>> COMPONENT_BAUBLE = DataComponentType.<List<BaubleType>>builder()
+			.persistent(enumCodec(BaubleType.class).listOf())
+			.networkSynchronized(ByteBufCodecs.<ByteBuf, BaubleType>list().apply(enumStreamCodec(BaubleType.class)))
+			.build();
 
     /**
      * Slot assignment {@link TagKey} definitions for Baubles 2.
@@ -81,4 +97,17 @@ public final class BaublesData {
     public static ResourceLocation id(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
+
+	@ApiStatus.Internal
+	private static <E extends Enum<E>> Codec<E> enumCodec(Class<E> clazz) {
+		return Codec.INT.xmap(i -> clazz.getEnumConstants()[i], Enum::ordinal);
+	}
+
+	@ApiStatus.Internal
+	private static <E extends Enum<E>> StreamCodec<ByteBuf, E> enumStreamCodec(Class<E> clazz) {
+		return new StreamCodec<>() {
+			public E decode(ByteBuf buffer) { return clazz.getEnumConstants()[buffer.readInt()]; }
+			public void encode(ByteBuf buffer, E value) { buffer.writeInt(value.ordinal()); }
+		};
+	}
 }
