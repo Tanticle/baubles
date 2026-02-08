@@ -17,8 +17,10 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.neoforged.neoforge.common.NeoForge;
 import tld.unknown.baubles.BaublesHolderAttachment;
 import tld.unknown.baubles.BaublesMod;
+import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.Baubles;
 import tld.unknown.baubles.api.IBauble;
@@ -194,6 +196,8 @@ public class ExpandedInventoryMenu extends AbstractCraftingMenu {
             } else if(Baubles.API.hasBaubleImplementation(itemstack1)) {
                 IBauble impl = Baubles.API.getBaubleImplementation(itemstack1);
                 BaubleType type = BaubleType.bySlotId(pIndex - baublesInvIdStart);
+				if(NeoForge.EVENT_BUS.post(new BaublesEvent.Unequip(type, itemstack1, player)).isCanceled())
+					return ItemStack.EMPTY;
                 if (impl.canUnequip(type, itemstack1, player) && this.moveItemStackTo(itemstack1, 9, 45, false)) {
                     impl.onUnequipped(type, itemstack1, player);
                     return ItemStack.EMPTY;

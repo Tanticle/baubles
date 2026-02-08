@@ -8,9 +8,9 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.Baubles;
 
@@ -39,9 +39,9 @@ public class BaublesExample {
     public static final class ModBusSubscriber {
 
         @SubscribeEvent
-        public static void onClientInit(final FMLClientSetupEvent event) {
-			Baubles.API.registerRenderer(ID, new TestRingItem.TestRenderer());
-			Baubles.API.registerRenderer(ID_2, new TestRingItem.TestRenderer());
+        public static void onBaublesRendererRegistration(final BaublesEvent.RendererRegistration event) {
+			event.registerRenderer(ID, new TestRingItem.TestRenderer());
+			event.registerRenderer(ID_2, new TestRingItem.TestRenderer());
         }
     }
 }

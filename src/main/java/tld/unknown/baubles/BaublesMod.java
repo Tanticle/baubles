@@ -25,6 +25,7 @@ import tld.unknown.baubles.menu.ExpandedInventoryMenu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Mod(Baubles.MOD_ID)
 public class BaublesMod implements IBaublesAPI {
@@ -36,7 +37,7 @@ public class BaublesMod implements IBaublesAPI {
 	/* -----------------------------------------------------------------------------------------------------------*/
 
 	public static final DeferredHolder<AttachmentType<?>, AttachmentType<BaublesHolderAttachment>> ATTACHMENT_BAUBLES = REGISTRY_ATTACHMENTS.register(
-			Baubles.ID_ATTACHMENT_BAUBLES.getPath(),
+			"baubles",
 			() -> AttachmentType.serializable((holder) -> new BaublesHolderAttachment((Player)holder)).copyOnDeath().build());
 
 	public static final DeferredHolder<MenuType<?>, MenuType<ExpandedInventoryMenu>> MENU_EXPANDED_INVENTORY = REGISTRY_MENU_TYPES.register(
@@ -84,12 +85,12 @@ public class BaublesMod implements IBaublesAPI {
 	}
 
 	@Override
-	public void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer) {
-		BaublesClient.RENDERERS.registerRenderer(key, renderer, false);
+	public IBaublesHolder getBaublesInventory(@NotNull Player player) {
+		return player.getData(ATTACHMENT_BAUBLES);
 	}
 
 	@Override
-	public void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer, boolean replace) {
-		BaublesClient.RENDERERS.registerRenderer(key, renderer, replace);
+	public Map<ResourceLocation, IBaubleRenderer> getBaubleRenderers() {
+		return BaublesClient.RENDERERS.renderers;
 	}
 }

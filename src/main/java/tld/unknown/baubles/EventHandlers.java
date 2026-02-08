@@ -6,6 +6,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -45,8 +46,11 @@ public final class EventHandlers {
             for (int i = 0; i < IBaublesHolder.INVENTORY_SIZE; i++) {
                 ItemStack slot = baubles.getAllSlots()[i];
                 IBauble impl = Baubles.API.getBaubleImplementation(slot);
-                if(slot != ItemStack.EMPTY && impl != null) {
-                    impl.onWornTick(BaubleType.bySlotId(i), slot, event.getEntity());
+                if(slot != ItemStack.EMPTY) {
+					BaubleType type = BaubleType.bySlotId(i);
+					NeoForge.EVENT_BUS.post(new BaublesEvent.WornTick(type, slot, event.getEntity()));
+					if(impl != null)
+                    	impl.onWornTick(type, slot, event.getEntity());
                 }
             }
         }

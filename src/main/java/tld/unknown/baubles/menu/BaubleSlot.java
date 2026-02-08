@@ -3,9 +3,11 @@ package tld.unknown.baubles.menu;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.items.SlotItemHandler;
 import org.jetbrains.annotations.Nullable;
 import tld.unknown.baubles.BaublesHolderAttachment;
+import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.Baubles;
 import tld.unknown.baubles.api.IBauble;
@@ -40,6 +42,8 @@ public class BaubleSlot extends SlotItemHandler {
 
     @Override
     public void onTake(Player pPlayer, ItemStack pStack) {
+		if(NeoForge.EVENT_BUS.post(new BaublesEvent.Unequip(type, pStack, pPlayer)).isCanceled())
+			return;
         IBauble impl = Baubles.API.getBaubleImplementation(pStack);
         if(impl != null) {
             if(impl.canUnequip(type, pStack, pPlayer)) {
@@ -57,13 +61,20 @@ public class BaubleSlot extends SlotItemHandler {
         boolean isSame = ItemStack.isSameItemSameComponents(currentStack, stack);
         Player p = ((BaublesHolderAttachment)getItemHandler()).getPlayer();
         IBauble impl = Baubles.API.getBaubleImplementation(currentStack);
-        if(impl != null && !isSame)
-            impl.onUnequipped(type, getItem(), p);
+		if(NeoForge.EVENT_BUS.post(new BaublesEvent.Equip(type, currentStack, p)).isCanceled())
+			return;
+        if(!isSame && currentStack != ItemStack.EMPTY) {
+			if(NeoForge.EVENT_BUS.post(new BaublesEvent.Unequip(type, currentStack, p)).isCanceled())
+				return;
+			if(impl != null)
+				impl.onUnequipped(type, getItem(), p);
+		}
         super.set(stack);
         currentStack = getItem();
         IBauble implNew = Baubles.API.getBaubleImplementation(currentStack);
-        if(implNew != null && !isSame)
-            implNew.onEquipped(type, currentStack, p);
+        if(!isSame && implNew != null) {
+			implNew.onEquipped(type, currentStack, p);
+		}
     }
 
 	@Override

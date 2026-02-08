@@ -1,11 +1,14 @@
 package tld.unknown.baubles.api;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The main API Class for Baubles 2.
@@ -43,17 +46,11 @@ public interface IBaublesAPI {
     List<BaubleType> getBaubleTypes(@NotNull ItemStack stack);
 
 	/**
-	 * Registers a new {@link IBaubleRenderer} for the given item {@link ResourceLocation}. Will not replace existing registrations.
-	 * @param key The {@link ResourceLocation} of the item referencing this {@link IBaubleRenderer}.
-	 * @param renderer The instance of the {@link IBaubleRenderer} to be registered.
+	 * Returns the {@link IBaublesHolder} for the given {@link Player}.
+	 * @param player The {@link Player} being queried for their {@link IBaublesHolder}.
 	 */
-	void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer);
+	 IBaublesHolder getBaublesInventory(@NotNull Player player);
 
-	/**
-	 * Registers a new {@link IBaubleRenderer} for the given item {@link ResourceLocation}.
-	 * @param key The {@link ResourceLocation} of the item referencing this {@link IBaubleRenderer}.
-	 * @param renderer The instance of the {@link IBaubleRenderer} to be registered.
-	 * @param replace Whether to replace an already existing registration for this item {@link ResourceLocation}.
-	 */
-	void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer, boolean replace);
+	@ApiStatus.Internal
+	Map<ResourceLocation, IBaubleRenderer> getBaubleRenderers();
 }
