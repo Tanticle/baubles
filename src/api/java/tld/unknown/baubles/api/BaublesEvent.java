@@ -69,7 +69,7 @@ public final class BaublesEvent {
 	/**
 	 * Event fired every tick for each {@link ItemStack} currently equipped in a bauble slot.
 	 * <p>
-	 * Will only fire on the server, and before the {@link IBauble#onWornTick(BaubleType, ItemStack, Player)} function of an {@link IBauble} item.
+	 * Will fire on the client and server, and before the {@link IBauble#onWornTick(BaubleType, ItemStack, Player)} function of an {@link IBauble} item.
 	 */
 	public static class WornTick extends EquipmentEvent {
 		public WornTick(BaubleType type, ItemStack item, Player player) { super(type, item, player); }
