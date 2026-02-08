@@ -32,7 +32,7 @@ public class TestRingItem extends Item implements IBauble {
         System.out.printf("Unequipped a %s on the %s.%n", type.name(), side);
     }
 
-    public static class TestRenderer implements IBaubleRenderer {
+	public static class TestRenderer implements IBaubleRenderer {
 
         @Override
         public void renderHead(PoseStack pose, MultiBufferSource bufferSource, int packetLight, float deltaTick, Player p, ItemStack stack, BaubleType slot) {

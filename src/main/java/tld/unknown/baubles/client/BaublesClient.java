@@ -33,7 +33,7 @@ public final class BaublesClient {
 
 		@SubscribeEvent
 		public static void onClientInit(final FMLClientSetupEvent event) {
-			ModLoader.postEvent(new BaublesEvent.RendererRegistration());
+			event.enqueueWork(() -> ModLoader.postEvent(new BaublesEvent.RendererRegistration()));
 		}
 	}
 }
