@@ -9,7 +9,6 @@
 - Better stackable bauble handling
 ---------------------
 ## Feature Tasks
-- BaublesEvent
 - Rendering
   - Debug renderer should become translucent.
   - First-person arm rendering
