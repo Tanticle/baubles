@@ -11,8 +11,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import net.neoforged.neoforge.client.settings.KeyModifier;
 import org.lwjgl.glfw.GLFW;
-import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.api.Baubles;
+import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.client.rendering.BaubleRenderers;
 
 @Mod(value = Baubles.MOD_ID, dist = Dist.CLIENT)
@@ -22,13 +22,13 @@ public final class BaublesClient {
 
     public static final KeyMapping KEY_INVENTORY = new KeyMapping("key.baubles.inventory",
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B,
-            "key.categories.inventory");
+			KeyMapping.Category.MISC);
 
     public static final KeyMapping KEY_DEBUG = new KeyMapping("key.baubles.toggle_debug",
             KeyConflictContext.UNIVERSAL, KeyModifier.SHIFT, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_B,
-            "key.categories.misc");
+			KeyMapping.Category.MISC);
 
-	@EventBusSubscriber(modid = Baubles.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+	@EventBusSubscriber(modid = Baubles.MOD_ID, value = Dist.CLIENT)
 	public static final class ModBusSubscriber {
 
 		@SubscribeEvent

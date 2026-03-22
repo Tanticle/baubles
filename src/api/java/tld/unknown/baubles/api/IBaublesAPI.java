@@ -1,6 +1,7 @@
 package tld.unknown.baubles.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.ApiStatus;
@@ -14,6 +15,7 @@ import java.util.Map;
  * The main API Class for Baubles 2.
  * @see <a href=https://github.com/Tanticle/baubles/wiki>Baubles 2 Wiki</a>
  * @author Tom Tanticle
+ * @version 0.8
  */
 public interface IBaublesAPI {
 
@@ -49,8 +51,8 @@ public interface IBaublesAPI {
 	 * Returns the {@link IBaublesHolder} for the given {@link Player}.
 	 * @param player The {@link Player} being queried for their {@link IBaublesHolder}.
 	 */
-	 IBaublesHolder getBaublesInventory(@NotNull Player player);
+	 IBaublesHolder getBaublesInventory(@NotNull Avatar player);
 
 	@ApiStatus.Internal
-	Map<ResourceLocation, IBaubleRenderer> getBaubleRenderers();
+	Map<Identifier, IBaubleRenderer<? extends BaubleRenderContext>> getBaubleRenderers();
 }

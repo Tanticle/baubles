@@ -1,23 +1,24 @@
 package tld.unknown.baubles.menu;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.items.SlotItemHandler;
+import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 import org.jetbrains.annotations.Nullable;
 import tld.unknown.baubles.BaublesHolderAttachment;
-import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.Baubles;
+import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.api.IBauble;
 
-public class BaubleSlot extends SlotItemHandler {
+public class BaubleSlot extends ResourceHandlerSlot {
 
     private final BaubleType type;
 
     public BaubleSlot(BaublesHolderAttachment handler, int index, int xPosition, int yPosition) {
-        super(handler, index, xPosition, yPosition);
+        super(handler, handler::set, index, xPosition, yPosition);
         this.type = BaubleType.bySlotId(index);
     }
 
@@ -26,7 +27,7 @@ public class BaubleSlot extends SlotItemHandler {
         boolean valid = type.isItemValid(stack);
         IBauble impl = Baubles.API.getBaubleImplementation(stack);
         if(impl != null)
-            return valid && impl.canEquip(type, stack, ((BaublesHolderAttachment)getItemHandler()).getPlayer());
+            return valid && impl.canEquip(type, stack, ((BaublesHolderAttachment)getResourceHandler()).getPlayer());
         return valid;
     }
 
@@ -55,30 +56,30 @@ public class BaubleSlot extends SlotItemHandler {
         }
     }
 
-    @Override
-    public void set(ItemStack stack) {
-        ItemStack currentStack = getItem();
-        boolean isSame = ItemStack.isSameItemSameComponents(currentStack, stack);
-        Player p = ((BaublesHolderAttachment)getItemHandler()).getPlayer();
-        IBauble impl = Baubles.API.getBaubleImplementation(currentStack);
+	@Override
+	public void setByPlayer(ItemStack itemStack) {
+		ItemStack currentStack = getItem();
+		boolean isSame = ItemStack.isSameItemSameComponents(currentStack, itemStack);
+		Player p = ((BaublesHolderAttachment)getResourceHandler()).getPlayer();
+		IBauble impl = Baubles.API.getBaubleImplementation(currentStack);
 		if(NeoForge.EVENT_BUS.post(new BaublesEvent.Equip(type, currentStack, p)).isCanceled())
 			return;
-        if(!isSame && currentStack != ItemStack.EMPTY) {
+		if(!isSame && currentStack != ItemStack.EMPTY) {
 			if(NeoForge.EVENT_BUS.post(new BaublesEvent.Unequip(type, currentStack, p)).isCanceled())
 				return;
 			if(impl != null)
 				impl.onUnequipped(type, getItem(), p);
 		}
-        super.set(stack);
-        currentStack = getItem();
-        IBauble implNew = Baubles.API.getBaubleImplementation(currentStack);
-        if(!isSame && implNew != null) {
+		set(itemStack);
+		currentStack = getItem();
+		IBauble implNew = Baubles.API.getBaubleImplementation(currentStack);
+		if(!isSame && implNew != null) {
 			implNew.onEquipped(type, currentStack, p);
 		}
-    }
+	}
 
 	@Override
-	public @Nullable ResourceLocation getNoItemIcon() {
+	public @Nullable Identifier getNoItemIcon() {
 		return type.getPlaceholderTexture();
 	}
 }

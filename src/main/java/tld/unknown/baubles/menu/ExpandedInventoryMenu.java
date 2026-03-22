@@ -2,7 +2,7 @@ package tld.unknown.baubles.menu;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -20,9 +20,9 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.neoforged.neoforge.common.NeoForge;
 import tld.unknown.baubles.BaublesHolderAttachment;
 import tld.unknown.baubles.BaublesMod;
-import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.Baubles;
+import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.api.IBauble;
 
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.Optional;
 
 public class ExpandedInventoryMenu extends AbstractCraftingMenu {
 
-    private static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[] {
+    private static final Identifier[] TEXTURE_EMPTY_SLOTS = new Identifier[] {
             InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS,
             InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS,
             InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE,
@@ -95,7 +95,7 @@ public class ExpandedInventoryMenu extends AbstractCraftingMenu {
                 }
 
                 @Override
-                public ResourceLocation getNoItemIcon() {
+                public Identifier getNoItemIcon() {
                     return TEXTURE_EMPTY_SLOTS[equipmentslot.getIndex()];
                 }
             });
@@ -119,7 +119,7 @@ public class ExpandedInventoryMenu extends AbstractCraftingMenu {
             }
 
             @Override
-            public ResourceLocation getNoItemIcon() {
+            public Identifier getNoItemIcon() {
                 return InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD;
             }
         });
@@ -271,7 +271,7 @@ public class ExpandedInventoryMenu extends AbstractCraftingMenu {
 				RecipeHolder<CraftingRecipe> recipeholder = optional.get();
 				CraftingRecipe craftingrecipe = recipeholder.value();
 				if (resultSlots.setRecipeUsed(serverplayer, recipeholder)) {
-					ItemStack itemstack1 = craftingrecipe.assemble(craftinginput, level.registryAccess());
+					ItemStack itemstack1 = craftingrecipe.assemble(craftinginput);
 					if (itemstack1.isItemEnabled(level.enabledFeatures())) {
 						itemstack = itemstack1;
 					}
@@ -291,7 +291,7 @@ public class ExpandedInventoryMenu extends AbstractCraftingMenu {
 	public void removed(Player player) {
 		super.removed(player);
 		this.resultSlots.clearContent();
-		if (!player.level().isClientSide) {
+		if (!player.level().isClientSide()) {
 			this.clearContainer(player, this.craftSlots);
 		}
 	}

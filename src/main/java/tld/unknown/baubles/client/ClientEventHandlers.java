@@ -1,38 +1,57 @@
 package tld.unknown.baubles.client;
 
+import com.google.common.reflect.TypeToken;
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.client.renderer.entity.player.AvatarRenderer;
+import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Avatar;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.loading.FMLLoader;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.renderstate.RegisterRenderStateModifiersEvent;
 import tld.unknown.baubles.BaublesMod;
+import tld.unknown.baubles.api.BaubleRenderContext;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.Baubles;
+import tld.unknown.baubles.api.IBaubleRenderer;
 import tld.unknown.baubles.client.gui.BaublesButton;
 import tld.unknown.baubles.client.gui.ExpandedInventoryScreen;
-import tld.unknown.baubles.client.rendering.BaubleRenderers;
 import tld.unknown.baubles.client.rendering.BaublesRenderLayer;
 import tld.unknown.baubles.menu.ExpandedInventoryMenu;
 import tld.unknown.baubles.networking.ServerboundOpenBaublesInvPacket;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+
 
 public final class ClientEventHandlers {
 
-    @EventBusSubscriber(modid = Baubles.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = Baubles.MOD_ID, value = Dist.CLIENT)
     public static final class ModBusSubscriber {
 
         @SubscribeEvent
         public static void registerKeybinds(final RegisterKeyMappingsEvent event) {
             event.register(BaublesClient.KEY_INVENTORY);
-            if(!FMLLoader.isProduction())
+            if(!FMLLoader.getCurrent().isProduction())
                 event.register(BaublesClient.KEY_DEBUG);
         }
 
@@ -48,16 +67,19 @@ public final class ClientEventHandlers {
 
         @SubscribeEvent
         public static void layerRegistration(final EntityRenderersEvent.AddLayers event) {
+            addLayerToHumanoid(event, EntityType.MANNEQUIN, BaublesRenderLayer::new);
             event.getSkins().forEach(s -> {
-				var renderer = event.getSkin(s);
-				if (renderer instanceof LivingEntityRenderer ler)
-					ler.addLayer(new BaublesRenderLayer(ler));
+				var renderer = event.getPlayerRenderer(s);
+                renderer.addLayer(new BaublesRenderLayer(renderer));
             });
         }
-    }
 
-    @EventBusSubscriber(modid = Baubles.MOD_ID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
-    public static final class ForgeBusSubscriber {
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        private static <E extends LivingEntity, S extends HumanoidRenderState, M extends HumanoidModel<S>>
+        void addLayerToHumanoid(EntityRenderersEvent.AddLayers event, EntityType<E> entityType, Function<LivingEntityRenderer<E, S, M>, ? extends RenderLayer<S, M>> factory) {
+            EntityRenderer<E, S> renderer = event.getRenderer(entityType);
+            if (renderer instanceof LivingEntityRenderer ler) ler.addLayer(factory.apply(ler));
+        }
 
         @SubscribeEvent
         public static void clientTick(final ClientTickEvent.Pre event) {
@@ -67,6 +89,25 @@ public final class ClientEventHandlers {
             if(BaublesClient.KEY_DEBUG.consumeClick()) {
                 BaublesClient.RENDERERS.toggleRenderDebugMode();
             }
+        }
+
+        @SubscribeEvent
+        public static void onRenderStateInject(final RegisterRenderStateModifiersEvent event) {
+            event.registerEntityModifier(new TypeToken<AvatarRenderer<?>>() {}, (entity, state) -> {
+                List<Pair<Identifier, ? extends BaubleRenderContext>> contexts = new ArrayList<>();
+                ItemStack[] baubles = entity.getData(BaublesMod.ATTACHMENT_BAUBLES).getAllSlots();
+                for (BaubleType slot : BaubleType.values()) {
+                    ItemStack baubleItem = baubles[slot.ordinal()];
+                    if(baubleItem == ItemStack.EMPTY || !Baubles.API.isBaubleItem(baubleItem))
+                        continue;
+                    Identifier itemId = BuiltInRegistries.ITEM.getKey(baubleItem.getItem());
+                    IBaubleRenderer<? extends BaubleRenderContext> renderer = BaublesClient.RENDERERS.getRenderer(itemId);
+                    if(renderer == null)
+                        continue;
+                    contexts.add(Pair.of(itemId, renderer.prepareRenderState(baubleItem, slot, (Avatar) entity, entity.level())));
+                }
+                state.setRenderData(Baubles.CONTEXT_BAUBLES, contexts);
+            });
         }
 
         @SubscribeEvent

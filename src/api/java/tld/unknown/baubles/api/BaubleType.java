@@ -3,14 +3,14 @@ package tld.unknown.baubles.api;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.checkerframework.checker.index.qual.NonNegative;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnegative;
 import java.util.List;
 
 /**
@@ -33,10 +33,10 @@ public enum BaubleType {
     public static final Component NAME_PREFIX = Component.translatable("name.baubles.bauble").withStyle(ChatFormatting.GOLD).append(" - ");
 
     private final TagKey<Item> slotTag;
-    private final ResourceLocation placeholderTexture;
+    private final Identifier placeholderTexture;
     private final Component name;
 
-    BaubleType(TagKey<Item> slotTag, ResourceLocation placeholderTexture, Component name) {
+    BaubleType(TagKey<Item> slotTag, Identifier placeholderTexture, Component name) {
         this.slotTag = slotTag;
         this.placeholderTexture = placeholderTexture;
         this.name = name;
@@ -59,7 +59,7 @@ public enum BaubleType {
      * @param slotId The enum constant ordinal based on the {@link IBaublesHolder} slot id.
      * @return The {@link BaubleType} corresponding to the {@link IBaublesHolder} slot id, or null if out of bounds.
      */
-    public static @Nullable BaubleType bySlotId(@NonNegative int slotId) {
+    public static @Nullable BaubleType bySlotId(@Nonnegative int slotId) {
         for (BaubleType type : BaubleType.values()) {
             if(type.ordinal() == slotId)
                 return type;
@@ -68,10 +68,10 @@ public enum BaubleType {
     }
 
     /**
-     * Returns a {@link ResourceLocation} to the placeholder texture of this {@link BaubleType} slot.
-     * @return The {@link ResourceLocation} of the texture.
+     * Returns a {@link Identifier} to the placeholder texture of this {@link BaubleType} slot.
+     * @return The {@link Identifier} of the texture.
      */
-    public ResourceLocation getPlaceholderTexture() {
+    public Identifier getPlaceholderTexture() {
         return this.placeholderTexture;
     }
 

@@ -1,13 +1,9 @@
 package tld.unknown.baubles;
 
-import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Avatar;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +34,7 @@ public class BaublesMod implements IBaublesAPI {
 
 	public static final DeferredHolder<AttachmentType<?>, AttachmentType<BaublesHolderAttachment>> ATTACHMENT_BAUBLES = REGISTRY_ATTACHMENTS.register(
 			"baubles",
-			() -> AttachmentType.serializable((holder) -> new BaublesHolderAttachment((Player)holder)).copyOnDeath().build());
+			() -> AttachmentType.serializable((holder) -> new BaublesHolderAttachment((Avatar)holder)).copyOnDeath().sync(BaublesHolderAttachment.STREAM_CODEC).build());
 
 	public static final DeferredHolder<MenuType<?>, MenuType<ExpandedInventoryMenu>> MENU_EXPANDED_INVENTORY = REGISTRY_MENU_TYPES.register(
 			"baubles_inventory",
@@ -85,12 +81,12 @@ public class BaublesMod implements IBaublesAPI {
 	}
 
 	@Override
-	public IBaublesHolder getBaublesInventory(@NotNull Player player) {
+	public IBaublesHolder getBaublesInventory(@NotNull Avatar player) {
 		return player.getData(ATTACHMENT_BAUBLES);
 	}
 
 	@Override
-	public Map<ResourceLocation, IBaubleRenderer> getBaubleRenderers() {
+	public Map<Identifier, IBaubleRenderer<? extends BaubleRenderContext>> getBaubleRenderers() {
 		return BaublesClient.RENDERERS.renderers;
 	}
 }

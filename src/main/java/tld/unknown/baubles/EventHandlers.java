@@ -12,32 +12,29 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import tld.unknown.baubles.api.*;
-import tld.unknown.baubles.networking.ClientboundSyncDataPacket;
 import tld.unknown.baubles.networking.NetworkHandler;
 import tld.unknown.baubles.networking.ServerboundOpenBaublesInvPacket;
 
-import java.util.Arrays;
-
 public final class EventHandlers {
 
-    @EventBusSubscriber(modid = Baubles.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(modid = Baubles.MOD_ID)
     public static final class ModBusSubscriber {
 
         @SubscribeEvent
         public static void registerPackets(final RegisterPayloadHandlersEvent event) {
             final PayloadRegistrar registrar = event.registrar(Baubles.MOD_ID);
             registrar.versioned(Baubles.API_VERSION);
-            registrar.playToClient(ClientboundSyncDataPacket.TYPE, ClientboundSyncDataPacket.STREAM_CODEC, NetworkHandler::clientHandleDataSync);
             registrar.playToServer(ServerboundOpenBaublesInvPacket.TYPE, ServerboundOpenBaublesInvPacket.STREAM_CODEC, NetworkHandler::serverHandleOpenInv);
         }
 
         @SubscribeEvent
         public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-            event.registerEntity(Capabilities.ItemHandler.ENTITY, EntityType.PLAYER, (player, ctx) -> player.getData(BaublesMod.ATTACHMENT_BAUBLES));
+            event.registerEntity(Capabilities.Item.ENTITY, EntityType.PLAYER, (player, _) -> player.getData(BaublesMod.ATTACHMENT_BAUBLES));
+            event.registerEntity(Capabilities.Item.ENTITY, EntityType.MANNEQUIN, (mannequin, _) -> mannequin.getData(BaublesMod.ATTACHMENT_BAUBLES));
         }
     }
 
-    @EventBusSubscriber(modid = Baubles.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+    @EventBusSubscriber(modid = Baubles.MOD_ID)
     public static final class ForgeBusSubscriber {
 
         @SubscribeEvent
@@ -66,7 +63,6 @@ public final class EventHandlers {
                         player.addItem(itemCopy);
                     }
                 }
-                player.connection.send(new ClientboundSyncDataPacket(Arrays.asList(holder.getAllSlots())));
             });
         }
     }

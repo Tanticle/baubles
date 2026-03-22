@@ -1,13 +1,15 @@
 package tld.unknown.baubles.api;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.context.ContextKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.capabilities.ItemCapability;
@@ -18,6 +20,7 @@ import java.util.List;
 /**
  * A static utility class providing all sorts of constants and values for Baubles 2.
  * @author Tom Tanticle
+ * @version 0.8
  */
 public final class Baubles {
 
@@ -34,15 +37,15 @@ public final class Baubles {
     /**
      * The current API version. As long as the API version matches, mismatching versions of the mod will work.
      */
-    public static final String API_VERSION = "pre_1.0";
+    public static final String API_VERSION = "0.8";
 
 	/**
-	 * {@link ResourceLocation} that identifies the {@link IBaublesHolder} attachment.
+	 * {@link Identifier} that identifies the {@link IBaublesHolder} attachment.
 	 */
-	public static final ResourceLocation ID_ATTACHMENT_BAUBLES = id("baubles");
+	public static final Identifier ID_ATTACHMENT_BAUBLES = id("baubles");
 
 	/**
-	 * {@link ResourceLocation} that identifies the {@link ItemCapability} for items.
+	 * {@link Identifier} that identifies the {@link ItemCapability} for items.
 	 */
 	public static final ItemCapability<IBauble, Void> CAPABILITY_BAUBLE = ItemCapability.createVoid(id("bauble"), IBauble.class);
 
@@ -53,6 +56,11 @@ public final class Baubles {
 			.persistent(enumCodec(BaubleType.class).listOf())
 			.networkSynchronized(ByteBufCodecs.<ByteBuf, BaubleType>list().apply(enumStreamCodec(BaubleType.class)))
 			.build();
+
+	/**
+	 * {@link ContextKey} to retrieve the {@link IBaublesHolder} attachment from the {@link net.minecraft.client.renderer.entity.state.AvatarRenderState} during rendering.
+	 */
+	public static final ContextKey<List<Pair<Identifier, ? extends BaubleRenderContext>>> CONTEXT_BAUBLES = new ContextKey<>(Baubles.id("baubles_context"));
 
     /**
      * Slot assignment {@link TagKey} definitions for Baubles 2.
@@ -74,33 +82,33 @@ public final class Baubles {
     }
 
     /**
-     * Texture path constants as {@link ResourceLocation} for Baubles 2.
+     * Texture path constants as {@link Identifier} for Baubles 2.
      */
     public static final class Textures {
 
-        public static final ResourceLocation PLACEHOLDER_AMULET = id("container/slot/amulet");
-        public static final ResourceLocation PLACEHOLDER_BELT = id("container/slot/belt");
-        public static final ResourceLocation PLACEHOLDER_CHARM = id("container/slot/charm");
-        public static final ResourceLocation PLACEHOLDER_CHEST = id("container/slot/chest");
-        public static final ResourceLocation PLACEHOLDER_HEAD = id("container/slot/head");
-        public static final ResourceLocation PLACEHOLDER_RING = id("container/slot/ring");
+        public static final Identifier PLACEHOLDER_AMULET = id("container/slot/amulet");
+        public static final Identifier PLACEHOLDER_BELT = id("container/slot/belt");
+        public static final Identifier PLACEHOLDER_CHARM = id("container/slot/charm");
+        public static final Identifier PLACEHOLDER_CHEST = id("container/slot/chest");
+        public static final Identifier PLACEHOLDER_HEAD = id("container/slot/head");
+        public static final Identifier PLACEHOLDER_RING = id("container/slot/ring");
 
-        public static final ResourceLocation UI_EXPANDED_INV = id("textures/gui/expanded_inventory.png");
-        public static final ResourceLocation UI_BAUBLES_BUTTON = id("textures/gui/baubles_button.png");
+        public static final Identifier UI_EXPANDED_INV = id("textures/gui/expanded_inventory.png");
+        public static final Identifier UI_BAUBLES_BUTTON = id("textures/gui/baubles_button.png");
     }
 
     /**
-     * Network Packet ids as {@link ResourceLocation} for Baubles 2.
+     * Network Packet ids as {@link Identifier} for Baubles 2.
      */
     public static final class Networking {
 
-        public static final ResourceLocation SYNC_DATA = id("sync_data");
-        public static final ResourceLocation OPEN_INV = id("open_inv");
+        public static final Identifier SYNC_DATA = id("sync_data");
+        public static final Identifier OPEN_INV = id("open_inv");
     }
 
     @ApiStatus.Internal
-    public static ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    public static Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(MOD_ID, path);
     }
 
 	@ApiStatus.Internal

@@ -1,6 +1,6 @@
 package tld.unknown.baubles_example;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.api.distmarker.Dist;
@@ -10,17 +10,17 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import tld.unknown.baubles.api.BaublesEvent;
 import tld.unknown.baubles.api.BaubleType;
 import tld.unknown.baubles.api.Baubles;
+import tld.unknown.baubles.api.BaublesEvent;
 
 import java.util.List;
 
 @Mod("baubles_example")
 public class BaublesExample {
 
-    private static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath("baubles_example", "ring");
-    private static final ResourceLocation ID_2 = ResourceLocation.fromNamespaceAndPath("baubles_example", "ring_2");
+    private static final Identifier ID = Identifier.fromNamespaceAndPath("baubles_example", "ring");
+    private static final Identifier ID_2 = Identifier.fromNamespaceAndPath("baubles_example", "ring_2");
     private static final DeferredRegister.Items REGISTRY_ITEMS = DeferredRegister.Items.createItems(ID.getNamespace());
 
     public static final DeferredItem<TestRingItem> ITEM_RING = REGISTRY_ITEMS.registerItem(
@@ -35,7 +35,7 @@ public class BaublesExample {
         REGISTRY_ITEMS.register(modEventBus);
     }
 
-    @EventBusSubscriber(modid = "baubles_example", bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = "baubles_example", value = Dist.CLIENT)
     public static final class ModBusSubscriber {
 
         @SubscribeEvent

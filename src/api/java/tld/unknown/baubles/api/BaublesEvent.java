@@ -1,6 +1,6 @@
 package tld.unknown.baubles.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.Event;
@@ -57,7 +57,7 @@ public final class BaublesEvent {
 	}
 
 	/**
-	 * Event fired whenever a {@link ItemStack} is attempted to be removed from a bauble slot. If cancelled,
+	 * Event fired whenever a {@link ItemStack} is attempted to be removed from a bauble slot. If canceled,
 	 * the action is aborted and the {@link ItemStack} remains in the slot.
 	 * <p>
 	 * Will only fire on the server, and before the {@link IBauble#onUnequipped(BaubleType, ItemStack, Player)} function of an {@link IBauble} item.
@@ -83,21 +83,21 @@ public final class BaublesEvent {
 	public static class RendererRegistration extends Event implements IModBusEvent {
 
 		/**
-		 * Registers a new {@link IBaubleRenderer} for the given item {@link ResourceLocation}. Will not replace existing registrations.
-		 * @param key The {@link ResourceLocation} of the item referencing this {@link IBaubleRenderer}.
+		 * Registers a new {@link IBaubleRenderer} for the given item {@link Identifier}. Will not replace existing registrations.
+		 * @param key The {@link Identifier} of the item referencing this {@link IBaubleRenderer}.
 		 * @param renderer The instance of the {@link IBaubleRenderer} to be registered.
 		 */
-		public synchronized void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer) {
+		public synchronized <CTX extends BaubleRenderContext> void registerRenderer(@NotNull Identifier key, @NotNull IBaubleRenderer<CTX> renderer) {
 			registerRenderer(key, renderer, false);
 		}
 
 		/**
-		 * Registers a new {@link IBaubleRenderer} for the given item {@link ResourceLocation}.
-		 * @param key The {@link ResourceLocation} of the item referencing this {@link IBaubleRenderer}.
+		 * Registers a new {@link IBaubleRenderer} for the given item {@link Identifier}.
+		 * @param key The {@link Identifier} of the item referencing this {@link IBaubleRenderer}.
 		 * @param renderer The instance of the {@link IBaubleRenderer} to be registered.
-		 * @param replace Whether to replace an already existing registration for this item {@link ResourceLocation}.
+		 * @param replace Whether to replace an already existing registration for this item {@link Identifier}.
 		 */
-		public synchronized void registerRenderer(@NotNull ResourceLocation key, @NotNull IBaubleRenderer renderer, boolean replace) {
+		public synchronized <CTX extends BaubleRenderContext> void registerRenderer(@NotNull Identifier key, @NotNull IBaubleRenderer<CTX> renderer, boolean replace) {
 			if(!replace)
 				Baubles.API.getBaubleRenderers().putIfAbsent(key, renderer);
 			else
