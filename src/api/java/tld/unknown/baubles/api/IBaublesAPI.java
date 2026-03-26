@@ -15,7 +15,7 @@ import java.util.Map;
  * The main API Class for Baubles 2.
  * @see <a href=https://github.com/Tanticle/baubles/wiki>Baubles 2 Wiki</a>
  * @author Tom Tanticle
- * @version 0.8
+ * @version 1.0
  */
 public interface IBaublesAPI {
 

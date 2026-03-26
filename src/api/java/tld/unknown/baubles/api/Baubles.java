@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * A static utility class providing all sorts of constants and values for Baubles 2.
  * @author Tom Tanticle
- * @version 0.8
+ * @version 1.0
  */
 public final class Baubles {
 
@@ -37,7 +37,7 @@ public final class Baubles {
     /**
      * The current API version. As long as the API version matches, mismatching versions of the mod will work.
      */
-    public static final String API_VERSION = "0.8";
+    public static final String API_VERSION = "1.0";
 
 	/**
 	 * {@link Identifier} that identifies the {@link IBaublesHolder} attachment.
