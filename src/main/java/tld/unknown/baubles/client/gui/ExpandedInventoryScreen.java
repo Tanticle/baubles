@@ -1,6 +1,6 @@
 package tld.unknown.baubles.client.gui;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenPosition;
 import net.minecraft.client.gui.screens.inventory.AbstractRecipeBookScreen;
 import net.minecraft.client.gui.screens.inventory.EffectsInInventory;
@@ -15,7 +15,6 @@ import tld.unknown.baubles.menu.ExpandedInventoryMenu;
 
 public class ExpandedInventoryScreen extends AbstractRecipeBookScreen<ExpandedInventoryMenu> {
 
-    private float xMouse, yMouse;
     private boolean buttonClicked;
 
 	private final EffectsInInventory effects;
@@ -23,7 +22,7 @@ public class ExpandedInventoryScreen extends AbstractRecipeBookScreen<ExpandedIn
     public ExpandedInventoryScreen(ExpandedInventoryMenu inv, Player p, Component name) {
         super(inv, new CraftingRecipeBookComponent(p.inventoryMenu), p.getInventory(), name);
         this.titleLabelX = 115;
-        this.titleLabelY = 8;
+        this.titleLabelY = 6;
 		this.effects = new EffectsInInventory(this);
     }
 
@@ -47,8 +46,6 @@ public class ExpandedInventoryScreen extends AbstractRecipeBookScreen<ExpandedIn
 	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		super.extractContents(graphics, mouseX, mouseY, a);
 		this.effects.extractRenderState(graphics, mouseX, mouseY);
-		this.xMouse = (float)mouseX;
-		this.yMouse = (float)mouseY;
 	}
 
 	@Override

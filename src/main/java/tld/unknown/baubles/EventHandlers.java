@@ -1,5 +1,6 @@
 package tld.unknown.baubles;
 
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,7 +25,7 @@ public final class EventHandlers {
         public static void registerPackets(final RegisterPayloadHandlersEvent event) {
             final PayloadRegistrar registrar = event.registrar(Baubles.MOD_ID);
             registrar.versioned(Baubles.API_VERSION);
-            registrar.playToServer(ServerboundOpenBaublesInvPacket.TYPE, ServerboundOpenBaublesInvPacket.STREAM_CODEC, NetworkHandler::serverHandleOpenInv);
+            registrar.playToServer(ServerboundOpenBaublesInvPacket.TYPE, StreamCodec.unit(new ServerboundOpenBaublesInvPacket()), NetworkHandler::serverHandleOpenInv);
         }
 
         @SubscribeEvent

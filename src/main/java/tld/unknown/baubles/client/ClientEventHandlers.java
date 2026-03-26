@@ -84,7 +84,7 @@ public final class ClientEventHandlers {
         @SubscribeEvent
         public static void clientTick(final ClientTickEvent.Pre event) {
             if(BaublesClient.KEY_INVENTORY.consumeClick()) {
-                Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket(0, 0));
+                Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket());
             }
             if(BaublesClient.KEY_DEBUG.consumeClick()) {
                 BaublesClient.RENDERERS.toggleRenderDebugMode();

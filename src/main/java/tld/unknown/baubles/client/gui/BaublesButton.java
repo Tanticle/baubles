@@ -1,7 +1,7 @@
 package tld.unknown.baubles.client.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -29,9 +29,7 @@ public class BaublesButton extends AbstractButton {
 		if(parent instanceof ExpandedInventoryScreen) {
 			Minecraft.getInstance().setScreen(new InventoryScreen(Minecraft.getInstance().player));
 		} else {
-			float x = (float)Minecraft.getInstance().mouseHandler.xpos();
-			float y = (float)Minecraft.getInstance().mouseHandler.ypos();
-			Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket(x, y));
+			Minecraft.getInstance().getConnection().send(new ServerboundOpenBaublesInvPacket());
 		}
 	}
 
