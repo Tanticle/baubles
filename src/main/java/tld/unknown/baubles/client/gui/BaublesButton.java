@@ -36,12 +36,12 @@ public class BaublesButton extends AbstractButton {
 	}
 
 	@Override
-	protected void renderContents(GuiGraphics graphics, int mouseX, int mouseY, float a) {
+	protected void extractContents(GuiGraphicsExtractor graphics, int i, int i1, float v) {
 		if (this.visible) {
 			graphics.pose().pushMatrix();
 			if (isHovered()) {
 				graphics.blit(RenderPipelines.GUI_TEXTURED, Baubles.Textures.UI_BAUBLES_BUTTON, getX(), getY(), 10, 0, 10, 10, 20, 10);
-				graphics.drawCenteredString(Minecraft.getInstance().font, getMessage(), getX() + 5, getY() + getHeight(), 0xFFFFFF);
+				graphics.centeredText(Minecraft.getInstance().font, getMessage(), getX() + 5, getY() + getHeight(), 0xFFFFFF);
 			} else {
 				graphics.blit(RenderPipelines.GUI_TEXTURED,Baubles.Textures.UI_BAUBLES_BUTTON, getX(), getY(), 0, 0, 10, 10, 20, 10);
 			}

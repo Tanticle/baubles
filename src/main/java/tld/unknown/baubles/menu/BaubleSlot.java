@@ -1,6 +1,5 @@
 package tld.unknown.baubles.menu;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

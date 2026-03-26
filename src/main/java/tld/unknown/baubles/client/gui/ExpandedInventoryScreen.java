@@ -37,27 +37,35 @@ public class ExpandedInventoryScreen extends AbstractRecipeBookScreen<ExpandedIn
 		this.buttonClicked = true;
 	}
 
+	@Override
+	protected void extractLabels(GuiGraphicsExtractor graphics, int xm, int ym) {
+		graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, -12566464, false);
+
+	}
 
 	@Override
-    protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
-        pGuiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 4210752, false);
-    }
+	public void extractContents(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		super.extractContents(graphics, mouseX, mouseY, a);
+		this.effects.extractRenderState(graphics, mouseX, mouseY);
+		this.xMouse = (float)mouseX;
+		this.yMouse = (float)mouseY;
+	}
 
-    @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-		super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-		this.effects.render(pGuiGraphics, pMouseX, pMouseY);
-        this.xMouse = (float)pMouseX;
-        this.yMouse = (float)pMouseY;
-    }
+	@Override
+	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+		super.extractBackground(graphics, mouseX, mouseY, a);
+		int x = this.leftPos;
+		int y = this.topPos;
+		graphics.blit(RenderPipelines.GUI_TEXTURED, Baubles.Textures.UI_EXPANDED_INV, x, y, 0, 0, this.imageWidth, this.imageHeight, 176, 166);
 
-    @Override
-    protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        int x = this.leftPos;
-        int y = this.topPos;
-		pGuiGraphics.blit(RenderPipelines.GUI_TEXTURED, Baubles.Textures.UI_EXPANDED_INV, x, y, 0, 0, this.imageWidth, this.imageHeight, 176, 166);
-        InventoryScreen.renderEntityInInventoryFollowsMouse(pGuiGraphics, x + 26, y + 8, x + 75, y + 78, 30, 0.0625F, this.xMouse, this.yMouse, this.minecraft.player);
-    }
+		float centerX = (x + 26 + x + 75) / 2.0F;
+		float centerY = (y + 8 + y + 78) / 2.0F;
+		float xAngle = (float)Math.atan((centerX - mouseX) / 40.0F);
+		float yAngle = (float)Math.atan((centerY - mouseY) / 40.0F);
+		InventoryScreen.renderEntityInInventoryFollowsAngle(graphics, x + 26, y + 8, x + 75, y + 78, 30, 0.0625F, xAngle, yAngle, this.minecraft.player);
+
+		InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, x + 26, y + 8, x + 75, y + 78, 30, 0.0625F, mouseX, mouseY, this.minecraft.player);
+	}
 
 	@Override
 	public boolean mouseReleased(MouseButtonEvent event) {
